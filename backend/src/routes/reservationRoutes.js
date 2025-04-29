@@ -1,29 +1,26 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { getAllReservations, createReservation, updateReservation, deleteReservation } = require('../controllers/reservationController');
+const {
+  getAllReservations,
+  createReservation,
+  updateReservation,
+  updateReservationStatus,
+  deleteReservation,
+  getWeeklyReservations,
+} = require("../controllers/reservationController");
 
-const { authenticateToken } = require('../middlewares/authMiddleware');
+const { authenticateToken } = require("../middlewares/authMiddleware");
 
-router.get('/', getAllRooms);
+router.get("/", getAllReservations);
 
-router.post('/', authenticateToken, createReservation);
+router.post("/", authenticateToken, createReservation);
 
-router.put('/:id', authenticateToken, updateReservation);
+router.put("/:id", authenticateToken, updateReservation);
 
-router.delete('/:id', authenticateToken, deleteReservation);
+router.delete("/:id", authenticateToken, deleteReservation);
 
+router.patch("/:id/status", authenticateToken, updateReservationStatus);
 
-
-// GET /reservations → Tüm rezervasyonları getir
-router.get('/', getAllReservations);
-
-// POST /reservations → Yeni rezervasyon oluştur
-router.post('/', createReservation);
-
-// PUT /reservations/:id → Rezervasyonu güncelle
-router.put('/:id', updateReservation);
-
-// DELETE /reservations/:id → Rezervasyonu sil
-router.delete('/:id', deleteReservation);
+router.get("/weekly", authenticateToken, getWeeklyReservations);
 
 module.exports = router;

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const AdminReservationsPage = () => {
   const [reservations, setReservations] = useState([]);
@@ -10,27 +10,53 @@ const AdminReservationsPage = () => {
 
   const fetchReservations = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/reservations');
+      const response = await axios.get(
+        "http://localhost:5000/api/reservations",
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+          },
+        }
+      );
       setReservations(response.data);
     } catch (error) {
-      console.error('Rezervasyonlar getirilemedi:', error);
+      console.error("Rezervasyonlar getirilemedi:", error);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Bu odayı silmek istediğinizden emin misiniz?')) return;
+    if (!window.confirm("Bu rezervasyonu silmek istediğinizden emin misiniz?"))
+      return;
     try {
-      await axios.delete(`http://localhost:5000/api/rooms/${id}`, {
+      await axios.delete(`http://localhost:5000/api/reservations/${id}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('adminToken')}`
-        }
+          Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+        },
       });
-      fetchRooms(); // Yeniden yükle
+      fetchReservations(); // Listeyi güncelle
     } catch (error) {
-      console.error('Oda silinemedi:', error);
+      console.error("Rezervasyon silinemedi:", error);
     }
   };
-  
+
+  const handleStatusUpdate = async (id, newStatus) => {
+    try {
+      await axios.patch(
+        `http://localhost:5000/api/reservations/${id}/status`,
+        {
+          status: newStatus,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+          },
+        }
+      );
+      fetchReservations(); // Listeyi güncelle
+    } catch (error) {
+      console.error("Durum güncellenemedi:", error);
+    }
+  };
 
   return (
     <div className="container mt-5">
@@ -44,6 +70,8 @@ const AdminReservationsPage = () => {
             <th>Çıkış Tarihi</th>
             <th>Toplam Fiyat (₺)</th>
             <th>İşlemler</th>
+            <th>Durum</th>
+            <th>Güncelle</th>
           </tr>
         </thead>
         <tbody>
@@ -61,6 +89,35 @@ const AdminReservationsPage = () => {
                 >
                   Sil
                 </button>
+              </td>
+              <td>
+                <span
+                  className={`badge ${
+                    reservation.status === "checked-in"
+                      ? "bg-success"
+                      : reservation.status === "checked-out"
+                      ? "bg-secondary"
+                      : reservation.status === "canceled"
+                      ? "bg-danger"
+                      : "bg-warning text-dark"
+                  }`}
+                >
+                  {reservation.status}
+                </span>
+              </td>
+              <td>
+                <select
+                  className="form-select"
+                  value={reservation.status}
+                  onChange={(e) =>
+                    handleStatusUpdate(reservation.id, e.target.value)
+                  }
+                >
+                  <option value="pending">Bekliyor</option>
+                  <option value="checked-in">Giriş Yapıldı</option>
+                  <option value="checked-out">Çıkış Yapıldı</option>
+                  <option value="canceled">İptal</option>
+                </select>
               </td>
             </tr>
           ))}

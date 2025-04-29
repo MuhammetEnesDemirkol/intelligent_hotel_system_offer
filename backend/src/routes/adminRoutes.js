@@ -1,9 +1,13 @@
-const express = require('express');
-const { login } = require('../controllers/adminController');
+const express = require("express");
+const { login, getDashboardStats } = require("../controllers/adminController");
+const { authenticateToken } = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
-// POST /admin/login → Giriş
-router.post('/login', login);
+// Admin Giriş
+router.post("/login", login);
+
+// Admin Dashboard İstatistikleri
+router.get("/stats", authenticateToken, getDashboardStats);
 
 module.exports = router;

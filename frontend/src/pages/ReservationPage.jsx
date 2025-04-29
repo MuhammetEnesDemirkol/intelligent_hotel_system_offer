@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom"; // ✅ navigate ekliyoruz
 
 const ReservationPage = () => {
+  const navigate = useNavigate(); // ✅ navigate hook'u tanımlıyoruz
   const [rooms, setRooms] = useState([]);
   const [formData, setFormData] = useState({
-    full_name: '',
-    email: '',
-    phone: '',
-    room_id: '',
-    check_in: '',
-    check_out: '',
+    full_name: "",
+    email: "",
+    phone: "",
+    room_id: "",
+    check_in: "",
+    check_out: "",
     total_price: 0,
   });
 
@@ -19,10 +21,10 @@ const ReservationPage = () => {
 
   const fetchRooms = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/rooms');
-      setRooms(response.data.filter(room => room.status === 'available')); // sadece boş odalar
+      const response = await axios.get("http://localhost:5000/api/rooms");
+      setRooms(response.data.filter((room) => room.status === "available"));
     } catch (error) {
-      console.error('Odalar getirilemedi:', error);
+      console.error("Odalar getirilemedi:", error);
     }
   };
 
@@ -33,47 +35,67 @@ const ReservationPage = () => {
   const handleReservation = async (e) => {
     e.preventDefault();
 
+    const token = localStorage.getItem("userToken");
+
+    if (!token) {
+      alert("Rezervasyon yapabilmek için giriş yapmalısınız.");
+      return;
+    }
+
     try {
-      // Önce müşteri kaydı yap
-      const customerRes = await axios.post('http://localhost:5000/api/customers', {
-        full_name: formData.full_name,
-        email: formData.email,
-        phone: formData.phone,
-      });
+      // 1. Önce müşteri kaydı yap
+      const customerRes = await axios.post(
+        "http://localhost:5000/api/customers",
+        {
+          full_name: formData.full_name,
+          email: formData.email,
+          phone: formData.phone,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       const customerId = customerRes.data.id;
 
-      // Tarihlerden gün sayısını hesapla
+      // 2. Tarihlerden gün sayısını hesapla
       const checkIn = new Date(formData.check_in);
       const checkOut = new Date(formData.check_out);
       const dayCount = (checkOut - checkIn) / (1000 * 60 * 60 * 24);
 
-      // Seçilen odanın fiyatını bul
-      const selectedRoom = rooms.find(room => room.id === parseInt(formData.room_id));
+      const selectedRoom = rooms.find(
+        (room) => room.id === parseInt(formData.room_id)
+      );
       const price = dayCount * selectedRoom.price_per_night;
 
-      // Sonra rezervasyon kaydı yap
-      await axios.post('http://localhost:5000/api/reservations', {
-        customer_id: customerId,
-        room_id: formData.room_id,
-        check_in: formData.check_in,
-        check_out: formData.check_out,
-        total_price: price,
-      });
+      // 3. Rezervasyon kaydı yap
+      const reservationRes = await axios.post(
+        "http://localhost:5000/api/reservations",
+        {
+          customer_id: customerId,
+          room_id: formData.room_id,
+          check_in: formData.check_in,
+          check_out: formData.check_out,
+          total_price: price,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
-      alert('Rezervasyon başarıyla oluşturuldu!');
-      setFormData({
-        full_name: '',
-        email: '',
-        phone: '',
-        room_id: '',
-        check_in: '',
-        check_out: '',
-        total_price: 0,
+      const createdReservation = reservationRes.data;
+
+      // ✅ Rezervasyon başarılı -> Ödeme sayfasına yönlendir
+      navigate("/payment", {
+        state: {
+          customerId: customerId,
+          reservationId: createdReservation.id,
+          amount: price,
+        },
       });
     } catch (error) {
-      console.error('Rezervasyon başarısız:', error);
-      alert('Bir hata oluştu.');
+      console.error("Rezervasyon başarısız:", error);
+      alert("Rezervasyon sırasında bir hata oluştu.");
     }
   };
 
@@ -121,7 +143,7 @@ const ReservationPage = () => {
             required
           >
             <option value="">Oda Seçiniz</option>
-            {rooms.map(room => (
+            {rooms.map((room) => (
               <option key={room.id} value={room.id}>
                 {room.room_number} - {room.room_type} ({room.capacity} kişi)
               </option>
@@ -150,7 +172,9 @@ const ReservationPage = () => {
             required
           />
         </div>
-        <button type="submit" className="btn btn-primary w-100">Rezervasyon Yap</button>
+        <button type="submit" className="btn btn-primary w-100">
+          Rezervasyon Yap
+        </button>
       </form>
     </div>
   );
