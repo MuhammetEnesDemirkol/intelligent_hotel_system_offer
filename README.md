@@ -1,1 +1,1 @@
-"# Akçllç Otel Sistemi" 
+"# Akilli Otel Sistemi" 
