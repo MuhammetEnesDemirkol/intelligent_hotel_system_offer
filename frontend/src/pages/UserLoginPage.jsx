@@ -31,35 +31,39 @@ const UserLoginPage = () => {
   };
 
   return (
-    <div className="container mt-5">
-      <h2 className="text-center mb-4">Giriş Yap</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <input
-            type="email"
-            className="form-control"
-            name="email"
-            placeholder="E-posta"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
+    <div className="auth-page">
+      <div className="auth-container">
+        <div className="auth-header">
+          <h2 className="auth-title">Giriş Yap</h2>
         </div>
-        <div className="mb-3">
-          <input
-            type="password"
-            className="form-control"
-            name="password"
-            placeholder="Şifre"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <button type="submit" className="btn btn-primary w-100">
-          Giriş Yap
-        </button>
-      </form>
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div className="auth-form-group">
+            <input
+              type="email"
+              className="auth-input"
+              name="email"
+              placeholder="E-posta"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="auth-form-group">
+            <input
+              type="password"
+              className="auth-input"
+              name="password"
+              placeholder="Şifre"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <button type="submit" className="auth-button">
+            Giriş Yap
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

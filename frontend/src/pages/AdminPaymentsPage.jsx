@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import "../styles/admin.css";
 
 const AdminPaymentsPage = () => {
   const [payments, setPayments] = useState([]);
@@ -21,32 +22,34 @@ const AdminPaymentsPage = () => {
   };
 
   return (
-    <div className="container mt-5">
-      <h2 className="text-center mb-4">Ödeme Kayıtları</h2>
-      <table className="table table-striped">
-        <thead>
-          <tr>
-            <th>Müşteri</th>
-            <th>Rezervasyon ID</th>
-            <th>Tutar (₺)</th>
-            <th>Tarih</th>
-            <th>Durum</th>
-          </tr>
-        </thead>
-        <tbody>
-          {payments.map((payment) => (
-            <tr key={payment.id}>
-              <td>{payment.full_name}</td>
-              <td>{payment.reservation_id}</td>
-              <td>{payment.amount}</td>
-              <td>{payment.payment_date}</td>
-              <td>
-                <span className="badge bg-success">{payment.status}</span>
-              </td>
+    <div className="admin-payments-page">
+      <div className="admin-payments-container">
+        <h2 className="admin-payments-title">Ödeme Kayıtları</h2>
+        <table className="admin-payments-table">
+          <thead>
+            <tr>
+              <th>Müşteri</th>
+              <th>Rezervasyon ID</th>
+              <th>Tutar (₺)</th>
+              <th>Tarih</th>
+              <th>Durum</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {payments.map((payment) => (
+              <tr key={payment.id}>
+                <td>{payment.full_name}</td>
+                <td>{payment.reservation_id}</td>
+                <td>{payment.amount}</td>
+                <td>{payment.payment_date}</td>
+                <td>
+                  <span className="admin-payment-status">{payment.status}</span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

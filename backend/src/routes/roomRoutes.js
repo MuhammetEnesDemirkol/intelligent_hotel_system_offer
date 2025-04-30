@@ -1,25 +1,28 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { getAllRooms, createRoom, updateRoom, deleteRoom } = require('../controllers/roomController');
+const {
+  getAllRooms,
+  getRoomById, // ← yeni ekleyeceğimiz controller
+  createRoom,
+  updateRoom,
+  deleteRoom,
+} = require("../controllers/roomController");
 
-const { authenticateToken } = require('../middlewares/authMiddleware');
-// GET herkes görebilir (isteğe bağlı koruyabiliriz)
-router.get('/', getAllRooms);
+const { authenticateToken } = require("../middlewares/authMiddleware");
 
-// POST, PUT, DELETE korumalı
-router.post('/', authenticateToken, createRoom);
-router.put('/:id', authenticateToken, updateRoom);
-router.delete('/:id', authenticateToken, deleteRoom);
-// GET /rooms → Tüm odaları getir
-router.get('/', getAllRooms);
+// GET /api/rooms → Tüm odaları getir
+router.get("/", getAllRooms);
 
-// POST /rooms → Yeni oda oluştur
-router.post('/', createRoom);
+// GET /api/rooms/:id → Tek oda getir (müşteri detay sayfası için)
+router.get("/:id", getRoomById);
 
-// PUT /rooms/:id → Odayı güncelle
-router.put('/:id', updateRoom);
+// POST /api/rooms → Yeni oda oluştur (admin)
+router.post("/", authenticateToken, createRoom);
 
-// DELETE /rooms/:id → Odayı sil
-router.delete('/:id', deleteRoom);
+// PUT /api/rooms/:id → Odayı güncelle (admin)
+router.put("/:id", authenticateToken, updateRoom);
+
+// DELETE /api/rooms/:id → Odayı sil (admin)
+router.delete("/:id", authenticateToken, deleteRoom);
 
 module.exports = router;

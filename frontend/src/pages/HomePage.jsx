@@ -1,64 +1,73 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import "../styles/user.css";
 
 const HomePage = () => {
   return (
-    <div>
+    <div className="home-page">
       {/* HERO BANNER */}
-      <section className="bg-dark text-light text-center p-5 mb-4">
-        <div className="container">
-          <h1 className="display-4">Hoş Geldiniz!</h1>
-          <p className="lead mt-3">
+      <section className="hero-section">
+        <div className="hero-content">
+          <h1 className="hero-title">Hoş Geldiniz!</h1>
+          <p className="hero-subtitle">
             Lüksün ve konforun buluştuğu adres: Akıllı Otel
           </p>
-          <Link to="/reservation" className="btn btn-primary btn-lg mt-4">
+          <Link to="/reservation" className="btn btn-primary hero-button">
             Hemen Rezervasyon Yap
           </Link>
         </div>
       </section>
 
       {/* HAKKIMIZDA */}
-      <section className="container mb-5">
-        <h2 className="text-center mb-4">Hakkımızda</h2>
-        <p className="text-center">
-          Akıllı Otel, konuklarına benzersiz bir konfor ve kalite deneyimi
-          sunar. Modern odalarımız, özel hizmetlerimiz ve güler yüzlü
-          personelimiz ile unutulmaz bir konaklama yaşayın.
-        </p>
+      <section className="about-section">
+        <div className="container">
+          <h2 className="about-title">Hakkımızda</h2>
+          <p className="about-text">
+            Akıllı Otel, konuklarına benzersiz bir konfor ve kalite deneyimi
+            sunar. Modern odalarımız, özel hizmetlerimiz ve güler yüzlü
+            personelimiz ile unutulmaz bir konaklama yaşayın.
+          </p>
+        </div>
       </section>
 
       {/* NEDEN BİZİ SEÇMELİSİNİZ */}
-      <section className="bg-light py-5">
+      <section className="features-section">
         <div className="container">
-          <h2 className="text-center mb-4">Neden Bizi Seçmelisiniz?</h2>
-          <div className="row text-center">
-            <div className="col-md-4 mb-3">
-              <h4>Modern Odalar</h4>
-              <p>
-                Konforlu ve şık tasarlanmış odalarımızda kendinizi evinizde
-                hissedin.
-              </p>
+          <h2 className="about-title">Neden Bizi Seçmelisiniz?</h2>
+          <div className="row">
+            <div className="col-md-4 mb-4">
+              <div className="feature-card">
+                <h4 className="feature-title">Modern Odalar</h4>
+                <p className="feature-text">
+                  Konforlu ve şık tasarlanmış odalarımızda kendinizi evinizde
+                  hissedin.
+                </p>
+              </div>
             </div>
-            <div className="col-md-4 mb-3">
-              <h4>Uygun Fiyatlar</h4>
-              <p>
-                Her bütçeye uygun fiyatlarımızla kaliteli hizmeti erişilebilir
-                kılıyoruz.
-              </p>
+            <div className="col-md-4 mb-4">
+              <div className="feature-card">
+                <h4 className="feature-title">Uygun Fiyatlar</h4>
+                <p className="feature-text">
+                  Her bütçeye uygun fiyatlarımızla kaliteli hizmeti erişilebilir
+                  kılıyoruz.
+                </p>
+              </div>
             </div>
-            <div className="col-md-4 mb-3">
-              <h4>Mükemmel Lokasyon</h4>
-              <p>
-                Şehrin merkezinde, tüm önemli noktalara kolay erişim imkanı.
-              </p>
+            <div className="col-md-4 mb-4">
+              <div className="feature-card">
+                <h4 className="feature-title">Mükemmel Lokasyon</h4>
+                <p className="feature-text">
+                  Şehrin merkezinde, tüm önemli noktalara kolay erişim imkanı.
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="text-center p-5">
-        <Link to="/rooms" className="btn btn-outline-primary btn-lg">
+      <section className="cta-section text-center">
+        <Link to="/rooms" className="btn cta-button">
           Odalarımıza Göz Atın
         </Link>
       </section>

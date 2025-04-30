@@ -2,47 +2,57 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  width: 100vw;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
 }
 
 .admin-header {
-  background-color: #343a40;
+  background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
   color: #fff;
-  padding: 20px;
+  padding: 1.5rem;
   text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .admin-main {
   flex: 1;
-  padding: 20px;
-  background-color: #f8f9fa;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .admin-footer {
-  background-color: #343a40;
-  color: #ddd;
-  padding: 10px;
+  background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+  color: #fff;
+  padding: 1rem;
   text-align: center;
-  font-size: 14px;
+  font-size: 0.9rem;
+  box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .admin-wrapper {
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
   width: 100vw;
-  overflow: hidden;
+  background: #ffffff;
 }
 
 .admin-sidebar {
-  width: 240px;
-  background-color: #343a40;
+  width: 280px;
+  background: linear-gradient(180deg, #1a237e 0%, #0d47a1 100%);
   color: white;
-  padding: 20px;
+  padding: 2rem;
   flex-shrink: 0;
+  box-shadow: 4px 0 6px rgba(0, 0, 0, 0.1);
 }
 
 .admin-sidebar h3 {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .admin-sidebar ul {
@@ -57,18 +67,27 @@
 .admin-sidebar ul li a {
   color: white;
   text-decoration: none;
-  font-size: 16px;
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  display: block;
+  transition: all 0.3s ease;
+  margin: 0.5rem 0;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .admin-sidebar ul li a:hover {
-  text-decoration: underline;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateX(5px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .admin-content {
   flex: 1;
-  padding: 30px;
-  background-color: #f8f9fa;
+  padding: 2rem;
+  background: #ffffff;
   min-height: 100vh;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
 }
 
 .booked-day {
@@ -88,13 +107,16 @@
 }
 
 .dashboard-card {
-  background-color: white;
-  border: 1px solid #ddd;
+  background: white;
   border-radius: 12px;
-  padding: 20px;
-  min-width: 200px;
-  text-align: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .dashboard-section {
@@ -123,4 +145,1048 @@
   height: 100%;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   margin-left: auto;
+}
+.user-fullscreen {
+  width: 100vw;
+  min-height: 100vh;
+  padding: 0;
+  margin: 0;
+  background-color: #f8f9fa;
+}
+
+.admin-login-page {
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+  padding: 2rem;
+}
+
+.admin-login-container {
+  max-width: 450px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  padding: 2.5rem;
+}
+
+.admin-login-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.admin-login-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a237e;
+  margin-bottom: 0.5rem;
+  position: relative;
+}
+
+.admin-login-title::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #1a237e, #0d47a1);
+}
+
+.admin-login-form {
+  width: 100%;
+}
+
+.admin-form-group {
+  margin-bottom: 1.5rem;
+}
+
+.admin-input,
+.admin-price-input,
+.admin-status-select,
+.admin-housekeeping-select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.admin-input:focus,
+.admin-price-input:focus,
+.admin-status-select:focus,
+.admin-housekeeping-select:focus {
+  border-color: #1a237e;
+  box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
+  outline: none;
+}
+
+.admin-button,
+.admin-delete-button,
+.admin-edit-button,
+.admin-save-button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.admin-button:hover,
+.admin-delete-button:hover,
+.admin-edit-button:hover,
+.admin-save-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.admin-button {
+  background: linear-gradient(135deg, #1a237e, #0d47a1);
+  color: white;
+}
+
+.admin-delete-button {
+  background: linear-gradient(135deg, #ff4b4b 0%, #ff0000 100%);
+  color: white;
+}
+
+.admin-edit-button {
+  background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+  color: white;
+}
+
+.admin-save-button {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+}
+
+.admin-status-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 500;
+  display: inline-block;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.admin-status-available {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+}
+
+.admin-status-occupied {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  color: white;
+}
+
+.admin-status-cleaning {
+  background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+  color: black;
+}
+
+.admin-status-maintenance {
+  background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .admin-wrapper {
+    flex-direction: column;
+  }
+
+  .admin-sidebar {
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .admin-content {
+    padding: 1rem;
+  }
+
+  .admin-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
+.admin-rooms-page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: #f8f9fa;
+}
+
+.admin-rooms-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+}
+
+.admin-rooms-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a237e;
+  text-align: center;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.admin-rooms-title::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, #1a237e, #0d47a1);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.admin-table th {
+  background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+  color: white;
+  font-weight: 600;
+  padding: 1rem;
+  text-align: left;
+}
+
+.admin-table td {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.admin-table tbody tr:hover {
+  background-color: rgba(26, 35, 126, 0.05);
+}
+
+.admin-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-delete-btn {
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #ff4b4b, #ff0000);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.admin-delete-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+  .admin-rooms-page {
+    padding: 1rem;
+  }
+
+  .admin-rooms-container {
+    padding: 1rem;
+  }
+
+  .admin-rooms-title {
+    font-size: 1.5rem;
+  }
+
+  .admin-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: 0.75rem;
+  }
+}
+
+.admin-status-page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: #f8f9fa;
+}
+
+.admin-status-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.admin-status-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a237e;
+  text-align: center;
+  margin-bottom: 2.5rem;
+  position: relative;
+}
+
+.admin-status-title::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, #1a237e, #0d47a1);
+}
+
+.admin-status-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+.admin-room-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.admin-room-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.admin-room-content {
+  padding: 1.5rem;
+}
+
+.admin-room-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a237e;
+  margin-bottom: 1rem;
+}
+
+.admin-room-info {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .admin-status-page {
+    padding: 1rem;
+  }
+
+  .admin-status-title {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .admin-status-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .admin-room-content {
+    padding: 1rem;
+  }
+}
+
+.admin-payments-page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: #f8f9fa;
+}
+
+.admin-payments-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+}
+
+.admin-payments-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a237e;
+  text-align: center;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.admin-payments-title::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, #1a237e, #0d47a1);
+}
+
+.admin-payments-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 1rem;
+}
+
+.admin-payments-table th {
+  background: #f8f9fa;
+  color: #1a237e;
+  font-weight: 600;
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.admin-payments-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  color: #333;
+  vertical-align: middle;
+}
+
+.admin-payments-table tbody tr {
+  transition: all 0.3s ease;
+}
+
+.admin-payments-table tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+.admin-payments-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-payment-status {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+  .admin-payments-page {
+    padding: 1rem;
+  }
+
+  .admin-payments-container {
+    padding: 1rem;
+  }
+
+  .admin-payments-title {
+    font-size: 1.5rem;
+  }
+
+  .admin-payments-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .admin-payments-table th,
+  .admin-payments-table td {
+    padding: 0.75rem;
+  }
+}
+
+.admin-reservations-page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: #f8f9fa;
+}
+
+.admin-reservations-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+}
+
+.admin-reservations-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a237e;
+  text-align: center;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.admin-reservations-title::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, #1a237e, #0d47a1);
+}
+
+.admin-reservations-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 1rem;
+}
+
+.admin-reservations-table th {
+  background: #f8f9fa;
+  color: #1a237e;
+  font-weight: 600;
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.admin-reservations-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  color: #333;
+  vertical-align: middle;
+}
+
+.admin-reservations-table tbody tr {
+  transition: all 0.3s ease;
+}
+
+.admin-reservations-table tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+.admin-reservations-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-delete-button {
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #ff4b4b, #ff0000);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.admin-delete-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 0, 0, 0.2);
+}
+
+.admin-reservation-status {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+}
+
+.admin-status-checked-in {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+}
+
+.admin-status-checked-out {
+  background: linear-gradient(135deg, #6c757d, #495057);
+  color: white;
+}
+
+.admin-status-canceled {
+  background: linear-gradient(135deg, #dc3545, #c82333);
+  color: white;
+}
+
+.admin-status-pending {
+  background: linear-gradient(135deg, #ffc107, #ffb300);
+  color: black;
+}
+
+@media (max-width: 1200px) {
+  .admin-reservations-container {
+    padding: 1.5rem;
+  }
+
+  .admin-reservations-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-reservations-page {
+    padding: 1rem;
+  }
+
+  .admin-reservations-container {
+    padding: 1rem;
+  }
+
+  .admin-reservations-title {
+    font-size: 1.5rem;
+  }
+
+  .admin-reservations-table th,
+  .admin-reservations-table td {
+    padding: 0.75rem;
+  }
+}
+
+.admin-pricing-page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: #f8f9fa;
+}
+
+.admin-pricing-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+}
+
+.admin-pricing-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a237e;
+  text-align: center;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.admin-pricing-title::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, #1a237e, #0d47a1);
+}
+
+.admin-pricing-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 1rem;
+}
+
+.admin-pricing-table th {
+  background: #f8f9fa;
+  color: #1a237e;
+  font-weight: 600;
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.admin-pricing-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  color: #333;
+  vertical-align: middle;
+}
+
+.admin-pricing-table tbody tr {
+  transition: all 0.3s ease;
+}
+
+.admin-pricing-table tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+.admin-pricing-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-price-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 1rem;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.admin-price-input:focus {
+  border-color: #1a237e;
+  box-shadow: 0 0 0 2px rgba(26, 35, 126, 0.1);
+  outline: none;
+}
+
+.admin-edit-button {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  color: #1a237e;
+  border: 1px solid #1a237e;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.admin-edit-button:hover {
+  background: rgba(26, 35, 126, 0.1);
+  transform: translateY(-2px);
+}
+
+.admin-save-button {
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.admin-save-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
+}
+
+@media (max-width: 768px) {
+  .admin-pricing-page {
+    padding: 1rem;
+  }
+
+  .admin-pricing-container {
+    padding: 1rem;
+  }
+
+  .admin-pricing-title {
+    font-size: 1.5rem;
+  }
+
+  .admin-pricing-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .admin-pricing-table th,
+  .admin-pricing-table td {
+    padding: 0.75rem;
+  }
+}
+
+.admin-customers-page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: #f8f9fa;
+}
+
+.admin-customers-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+}
+
+.admin-customers-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a237e;
+  text-align: center;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.admin-customers-title::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, #1a237e, #0d47a1);
+}
+
+.admin-customers-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 1rem;
+}
+
+.admin-customers-table th {
+  background: #f8f9fa;
+  color: #1a237e;
+  font-weight: 600;
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.admin-customers-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  color: #333;
+  vertical-align: middle;
+}
+
+.admin-customers-table tbody tr {
+  transition: all 0.3s ease;
+}
+
+.admin-customers-table tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+.admin-customers-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-customer-delete {
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #ff4b4b, #ff0000);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.admin-customer-delete:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 0, 0, 0.2);
+}
+
+.admin-customer-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.admin-customer-email {
+  color: #1a237e;
+  text-decoration: none;
+}
+
+.admin-customer-email:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .admin-customers-page {
+    padding: 1rem;
+  }
+
+  .admin-customers-container {
+    padding: 1rem;
+  }
+
+  .admin-customers-title {
+    font-size: 1.5rem;
+  }
+
+  .admin-customers-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .admin-customers-table th,
+  .admin-customers-table td {
+    padding: 0.75rem;
+  }
+}
+
+.admin-housekeeping-page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: #f8f9fa;
+}
+
+.admin-housekeeping-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+}
+
+.admin-housekeeping-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a237e;
+  text-align: center;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.admin-housekeeping-title::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, #1a237e, #0d47a1);
+}
+
+.admin-housekeeping-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 1rem;
+}
+
+.admin-housekeeping-table th {
+  background: #f8f9fa;
+  color: #1a237e;
+  font-weight: 600;
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.admin-housekeeping-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  color: #333;
+  vertical-align: middle;
+}
+
+.admin-housekeeping-table tbody tr {
+  transition: all 0.3s ease;
+}
+
+.admin-housekeeping-table tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+.admin-housekeeping-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-housekeeping-status {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+}
+
+.admin-status-clean {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+}
+
+.admin-status-cleaning {
+  background: linear-gradient(135deg, #ffc107, #ffb300);
+  color: black;
+}
+
+.admin-status-maintenance {
+  background: linear-gradient(135deg, #dc3545, #c82333);
+  color: white;
+}
+
+.admin-housekeeping-select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #333;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.admin-housekeeping-select:focus {
+  border-color: #1a237e;
+  box-shadow: 0 0 0 2px rgba(26, 35, 126, 0.1);
+  outline: none;
+}
+
+.admin-housekeeping-date {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .admin-housekeeping-page {
+    padding: 1rem;
+  }
+
+  .admin-housekeeping-container {
+    padding: 1rem;
+  }
+
+  .admin-housekeeping-title {
+    font-size: 1.5rem;
+  }
+
+  .admin-housekeeping-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .admin-housekeeping-table th,
+  .admin-housekeeping-table td {
+    padding: 0.75rem;
+  }
 }

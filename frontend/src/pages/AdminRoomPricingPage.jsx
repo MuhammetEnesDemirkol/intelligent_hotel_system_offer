@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import "../styles/admin.css";
 
 const AdminRoomPricingPage = () => {
   const [rooms, setRooms] = useState([]);
@@ -52,57 +53,59 @@ const AdminRoomPricingPage = () => {
   };
 
   return (
-    <div className="container mt-5">
-      <h2 className="text-center mb-4">Oda Fiyat Yönetimi</h2>
-      <table className="table table-bordered">
-        <thead>
-          <tr>
-            <th>Oda No</th>
-            <th>Tür</th>
-            <th>Mevcut Fiyat (₺)</th>
-            <th>Yeni Fiyat</th>
-            <th>İşlem</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rooms.map((room) => (
-            <tr key={room.id}>
-              <td>{room.room_number}</td>
-              <td>{room.room_type}</td>
-              <td>{room.price_per_night}</td>
-              <td>
-                {editingRoomId === room.id ? (
-                  <input
-                    type="number"
-                    className="form-control"
-                    value={priceInput}
-                    onChange={handlePriceChange}
-                  />
-                ) : (
-                  "-"
-                )}
-              </td>
-              <td>
-                {editingRoomId === room.id ? (
-                  <button
-                    className="btn btn-success btn-sm"
-                    onClick={() => handleSave(room)}
-                  >
-                    Kaydet
-                  </button>
-                ) : (
-                  <button
-                    className="btn btn-outline-primary btn-sm"
-                    onClick={() => handleEdit(room)}
-                  >
-                    Düzenle
-                  </button>
-                )}
-              </td>
+    <div className="admin-pricing-page">
+      <div className="admin-pricing-container">
+        <h2 className="admin-pricing-title">Oda Fiyat Yönetimi</h2>
+        <table className="admin-pricing-table">
+          <thead>
+            <tr>
+              <th>Oda No</th>
+              <th>Tür</th>
+              <th>Mevcut Fiyat (₺)</th>
+              <th>Yeni Fiyat</th>
+              <th>İşlem</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {rooms.map((room) => (
+              <tr key={room.id}>
+                <td>{room.room_number}</td>
+                <td>{room.room_type}</td>
+                <td>{room.price_per_night}</td>
+                <td>
+                  {editingRoomId === room.id ? (
+                    <input
+                      type="number"
+                      className="admin-price-input"
+                      value={priceInput}
+                      onChange={handlePriceChange}
+                    />
+                  ) : (
+                    "-"
+                  )}
+                </td>
+                <td>
+                  {editingRoomId === room.id ? (
+                    <button
+                      className="admin-save-button"
+                      onClick={() => handleSave(room)}
+                    >
+                      Kaydet
+                    </button>
+                  ) : (
+                    <button
+                      className="admin-edit-button"
+                      onClick={() => handleEdit(room)}
+                    >
+                      Düzenle
+                    </button>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

@@ -1,0 +1,99 @@
+.custom-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 4rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.3);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+}
+
+.custom-navbar a {
+  text-decoration: none;
+  margin-right: 1.5rem;
+  color: #2c3e50;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+}
+
+.custom-navbar a:hover {
+  color: #3498db;
+  background: rgba(52, 152, 219, 0.1);
+}
+
+.navbar-left,
+.navbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.brand {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-right: 2.5rem;
+  color: #2575ed !important;
+  letter-spacing: -0.5px;
+}
+
+.brand:hover {
+  transform: translateY(-1px);
+}
+
+.btn-register {
+  padding: 0.6rem 1.2rem !important;
+  background: linear-gradient(135deg, #3498db, #2575ed) !important;
+  color: white !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 6px rgba(37, 117, 237, 0.2) !important;
+}
+
+.btn-register:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 12px rgba(37, 117, 237, 0.3) !important;
+  background: linear-gradient(135deg, #2575ed, #3498db) !important;
+}
+
+.btn-logout {
+  border: none;
+  background: transparent;
+  color: #e74c3c;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.btn-logout:hover {
+  background: rgba(231, 76, 60, 0.1);
+  color: #c0392b;
+}
+
+@media (max-width: 768px) {
+  .custom-navbar {
+    padding: 1rem 2rem;
+  }
+
+  .brand {
+    font-size: 1.3rem;
+    margin-right: 1.5rem;
+  }
+
+  .custom-navbar a {
+    margin-right: 1rem;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+}

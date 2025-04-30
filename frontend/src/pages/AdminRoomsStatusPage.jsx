@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import "../styles/admin.css";
 
 const AdminRoomsStatusPage = () => {
   const [rooms, setRooms] = useState([]);
@@ -25,37 +26,41 @@ const AdminRoomsStatusPage = () => {
   const getBadgeColor = (status) => {
     switch (status) {
       case "available":
-        return "bg-success";
+        return "admin-status-available";
       case "occupied":
-        return "bg-danger";
+        return "admin-status-occupied";
       case "cleaning":
-        return "bg-warning text-dark";
+        return "admin-status-cleaning";
       case "maintenance":
-        return "bg-secondary";
+        return "admin-status-maintenance";
       default:
-        return "bg-light text-dark";
+        return "";
     }
   };
 
   return (
-    <div className="container mt-5">
-      <h2 className="text-center mb-4">Oda Durumları</h2>
-      <div className="row">
-        {rooms.map((room) => (
-          <div className="col-md-4 mb-3" key={room.id}>
-            <div className="card shadow-sm">
-              <div className="card-body">
-                <h5 className="card-title">Oda No: {room.room_number}</h5>
-                <p className="card-text">Tür: {room.room_type}</p>
-                <p className="card-text">Kapasite: {room.capacity}</p>
-                <p className="card-text">Fiyat: {room.price_per_night} ₺</p>
-                <span className={`badge ${getBadgeColor(room.status)} p-2`}>
+    <div className="admin-status-page">
+      <div className="admin-status-container">
+        <h2 className="admin-status-title">Oda Durumları</h2>
+        <div className="admin-status-grid">
+          {rooms.map((room) => (
+            <div className="admin-room-card" key={room.id}>
+              <div className="admin-room-content">
+                <h5 className="admin-room-title">Oda No: {room.room_number}</h5>
+                <p className="admin-room-info">Tür: {room.room_type}</p>
+                <p className="admin-room-info">Kapasite: {room.capacity}</p>
+                <p className="admin-room-info">
+                  Fiyat: {room.price_per_night} ₺
+                </p>
+                <span
+                  className={`admin-status-badge ${getBadgeColor(room.status)}`}
+                >
                   {room.status}
                 </span>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

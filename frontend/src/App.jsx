@@ -9,9 +9,10 @@ import RegisterPage from "./pages/RegisterPage";
 import UserLoginPage from "./pages/UserLoginPage";
 import AccountPage from "./pages/AccountPage";
 import PaymentPage from "./pages/PaymentPage";
+import RoomDetailPage from "./pages/RoomDetailPage";
 
 import PrivateRoute from "./components/PrivateRoute";
-import UserLayout from "./layouts/UsetLayout";
+import UserLayout from "./layouts/UserLayout";
 
 import AdminLayout from "./layouts/AdminLayout";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -28,69 +29,14 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<UserLayout />}>
-          <Route
-            path="/"
-            element={
-              <>
-                <Navbar />
-                <HomePage />
-              </>
-            }
-          />
-          <Route
-            path="/rooms"
-            element={
-              <>
-                <Navbar />
-                <RoomsPage />
-              </>
-            }
-          />
-          <Route
-            path="/reservation"
-            element={
-              <>
-                <Navbar />
-                <ReservationPage />
-              </>
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <>
-                <Navbar />
-                <RegisterPage />
-              </>
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              <>
-                <Navbar />
-                <UserLoginPage />
-              </>
-            }
-          />
-          <Route
-            path="/account"
-            element={
-              <>
-                <Navbar />
-                <AccountPage />
-              </>
-            }
-          />
-          <Route
-            path="/payment"
-            element={
-              <>
-                <Navbar />
-                <PaymentPage />
-              </>
-            }
-          />
+          <Route index element={<HomePage />} />
+          <Route path="rooms" element={<RoomsPage />} />
+          <Route path="rooms/:id" element={<RoomDetailPage />} />
+          <Route path="reservation" element={<ReservationPage />} />
+          <Route path="register" element={<RegisterPage />} />
+          <Route path="login" element={<UserLoginPage />} />
+          <Route path="account" element={<AccountPage />} />
+          <Route path="payment" element={<PaymentPage />} />
         </Route>
 
         {/* Admin giriş sayfası (login için Navbar'a gerek yok) */}
