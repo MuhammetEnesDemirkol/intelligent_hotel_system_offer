@@ -69,13 +69,13 @@ const ReservationPage = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("userToken");
-
+  
       if (!token) {
         alert("Lütfen giriş yapınız.");
         navigate("/login");
         return;
       }
-
+  
       // 1. Müşteri kaydı
       const customerRes = await axios.post(
         "http://localhost:5000/api/customers",
@@ -88,11 +88,11 @@ const ReservationPage = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-
+  
       const customerId = customerRes.data.id;
-
+  
       // 2. Rezervasyon
-      await axios.post(
+      const reservationRes = await axios.post(
         "http://localhost:5000/api/reservations",
         {
           customer_id: customerId,
@@ -105,14 +105,28 @@ const ReservationPage = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-
-      alert("Rezervasyon başarıyla oluşturuldu!");
+  
+      // 3. Ödeme oluştur
+      await axios.post(
+        "http://localhost:5000/api/payments",
+        {
+          customer_id: customerId,
+          reservation_id: reservationRes.data.id,
+          amount: formData.total_price,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+  
+      alert("Rezervasyon ve ödeme başarıyla oluşturuldu!");
       navigate("/account");
     } catch (error) {
       console.error("Rezervasyon başarısız:", error);
       alert("Bir hata oluştu.");
     }
   };
+  
 
   return (
     <div className="reservation-page">

@@ -70,32 +70,23 @@ const getMe = async (req, res) => {
 };
 
 const getUserReservations = async (req, res) => {
-  const userId = req.user.id;
   try {
-    const customer = await pool.query(
-      "SELECT id FROM customers WHERE email = (SELECT email FROM users WHERE id = $1)",
-      [userId]
-    );
-    if (customer.rows.length === 0) return res.json([]);
+    const userId = req.user.id; // Token'dan alınan kullanıcı ID
 
-    const customerId = customer.rows[0].id;
-
-    const { rows } = await pool.query(
-      `
+    const result = await pool.query(`
       SELECT r.*, rooms.room_number
       FROM reservations r
       JOIN rooms ON r.room_id = rooms.id
       WHERE r.customer_id = $1
       ORDER BY r.check_in DESC
-    `,
-      [customerId]
-    );
+    `, [userId]);
 
-    res.json(rows);
+    res.json(result.rows);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Rezervasyonlar getirilemedi" });
+    console.error("Rezervasyonlar alınamadı:", err);
+    res.status(500).json({ error: "Sunucu hatası" });
   }
 };
+
 
 module.exports = { register, login, getMe, getUserReservations };

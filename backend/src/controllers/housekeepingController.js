@@ -17,33 +17,29 @@ const getAllHousekeeping = async (req, res) => {
 // Güncelle
 const updateHousekeeping = async (req, res) => {
   const { id } = req.params;
-  const { status } = req.body;
-  const now = new Date().toISOString().split("T")[0];
+  const { status, last_cleaned } = req.body;
+
+  if (!status || !last_cleaned) {
+    return res.status(400).json({ error: "Status ve last_cleaned zorunludur." });
+  }
 
   try {
-    // Önce housekeeping tablosunu güncelle
-    const housekeepingResult = await pool.query(
-      `UPDATE housekeeping
-       SET status = $1, last_cleaned = $2
-       WHERE id = $3 RETURNING *`,
-      [status, now, id]
+    const result = await pool.query(
+      `UPDATE housekeeping SET status = $1, last_cleaned = $2 WHERE room_id = $3`,
+      [status, last_cleaned, id]
     );
 
-    const updatedHousekeeping = housekeepingResult.rows[0];
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: "Bu room_id ile eşleşen kayıt yok." });
+    }
 
-    // Sonra rooms tablosunu da güncelle
-    await pool.query(
-      `UPDATE rooms
-       SET status = $1
-       WHERE id = $2`,
-      [status === "clean" ? "available" : status, updatedHousekeeping.room_id]
-    );
-
-    res.json(updatedHousekeeping);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Güncelleme başarısız" });
+    res.status(200).json({ message: "Güncellendi" });
+  } catch (error) {
+    console.error("Temizlik güncellenemedi:", error.message, error.stack);
+    res.status(500).json({ error: "Sunucu hatası" });
   }
 };
+
+
 
 module.exports = { getAllHousekeeping, updateHousekeeping };

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import "../styles/admin.css";
 
 const AdminRoomsStatusPage = () => {
@@ -12,7 +13,7 @@ const AdminRoomsStatusPage = () => {
   const fetchRooms = async () => {
     try {
       const token = localStorage.getItem("adminToken");
-      const response = await axios.get("http://localhost:5000/api/rooms", {
+      const response = await axios.get("http://localhost:5000/api/rooms/status", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -23,8 +24,9 @@ const AdminRoomsStatusPage = () => {
     }
   };
 
-  const getBadgeColor = (status) => {
-    switch (status) {
+  const getBadgeClass = (room) => {
+    if (room.is_reserved_today) return "admin-status-reserved";
+    switch (room.status) {
       case "available":
         return "admin-status-available";
       case "occupied":
@@ -38,10 +40,14 @@ const AdminRoomsStatusPage = () => {
     }
   };
 
+  const getBadgeLabel = (room) => {
+    return room.is_reserved_today ? "Rezerve" : room.status;
+  };
+
   return (
     <div className="admin-status-page">
       <div className="admin-status-container">
-        <h2 className="admin-status-title">Oda Durumları</h2>
+        <h2 className="admin-status-title">Oda Durumları (Bugüne Göre)</h2>
         <div className="admin-status-grid">
           {rooms.map((room) => (
             <div className="admin-room-card" key={room.id}>
@@ -52,11 +58,12 @@ const AdminRoomsStatusPage = () => {
                 <p className="admin-room-info">
                   Fiyat: {room.price_per_night} ₺
                 </p>
-                <span
-                  className={`admin-status-badge ${getBadgeColor(room.status)}`}
-                >
-                  {room.status}
+                <span className={`admin-status-badge ${getBadgeClass(room)}`}>
+                  {getBadgeLabel(room)}
                 </span>
+                <Link to={`/admin/rooms/${room.id}`} className="btn btn-sm btn-outline-secondary mt-2 w-100">
+                  Takvimi Gör
+                </Link>
               </div>
             </div>
           ))}

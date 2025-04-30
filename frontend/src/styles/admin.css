@@ -90,11 +90,34 @@
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
 }
 
+.booked {
+  background-color: #dc3545 !important;
+  color: white !important;
+  border-radius: 50%;
+}
+
+
 .booked-day {
   background-color: #ff6f61 !important;
   color: white !important;
   border-radius: 50%;
 }
+
+.btn-logout-admin {
+  margin-top: 2rem;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  width: 100%;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.btn-logout-admin:hover {
+  background-color: #c82333;
+}
+
 .dashboard-header {
   text-align: center;
 }

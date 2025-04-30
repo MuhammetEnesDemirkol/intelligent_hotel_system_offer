@@ -6,6 +6,8 @@ CREATE TABLE rooms (
     capacity INTEGER NOT NULL,
     price_per_night DECIMAL(10,2) NOT NULL,
     status VARCHAR(20) DEFAULT 'available' -- available, occupied, cleaning
+    image_url TEXT;
+
 );
 
 -- Customers Table
@@ -57,3 +59,6 @@ CREATE TABLE payments (
     payment_date DATE NOT NULL DEFAULT CURRENT_DATE,
     status VARCHAR(20) DEFAULT 'completed'
 );
+
+ALTER TABLE reservations
+ADD COLUMN status VARCHAR(20) DEFAULT 'pending';

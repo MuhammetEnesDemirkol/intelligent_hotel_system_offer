@@ -5,19 +5,27 @@ import "../styles/user.css";
 
 const RoomDetailPage = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+
   const [room, setRoom] = useState(null);
+  const [reservations, setReservations] = useState([]);
   const [formData, setFormData] = useState({
     check_in: "",
     check_out: "",
   });
 
-  const navigate = useNavigate();
-
   useEffect(() => {
+    // Oda bilgisi
     axios
       .get(`http://localhost:5000/api/rooms/${id}`)
       .then((res) => setRoom(res.data))
       .catch((err) => console.error("Oda bilgisi alınamadı", err));
+
+    // Oda rezervasyonları
+    axios
+      .get(`http://localhost:5000/api/rooms/${id}/reservations`)
+      .then((res) => setReservations(res.data))
+      .catch((err) => console.error("Rezervasyonlar alınamadı", err));
   }, [id]);
 
   const handleChange = (e) => {
@@ -52,7 +60,7 @@ const RoomDetailPage = () => {
         </div>
 
         <img
-          src={"/images/room-1.png"}
+          src={room.image_url || "/images/room-1.png"}
           className="room-detail-image"
           alt={`Oda ${room.room_number}`}
         />
@@ -76,6 +84,22 @@ const RoomDetailPage = () => {
             <div className="room-detail-label">Açıklama</div>
             <div className="room-detail-value">{room.description}</div>
           </div>
+        </div>
+
+        {/* Rezerve Günler */}
+        <div className="room-reserved-dates mt-4">
+          <h5>Rezerve Günler</h5>
+          {reservations.length === 0 ? (
+            <p className="text-muted">Bu odada henüz rezervasyon yok.</p>
+          ) : (
+            <ul className="list-group">
+              {reservations.map((r, i) => (
+                <li key={i} className="list-group-item">
+                  {r.check_in.split("T")[0]} → {r.check_out.split("T")[0]}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
         <div className="reservation-form-card">

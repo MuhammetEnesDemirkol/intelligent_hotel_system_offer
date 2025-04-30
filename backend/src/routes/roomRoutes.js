@@ -1,28 +1,57 @@
 const express = require("express");
 const router = express.Router();
+const pool = require("../config/db");
+const { authenticateToken } = require("../middlewares/authMiddleware");
+
 const {
   getAllRooms,
-  getRoomById, // ← yeni ekleyeceğimiz controller
+  getRoomById,
   createRoom,
   updateRoom,
   deleteRoom,
+  getRoomSummaries,
+  getRoomsWithTodayStatus,
 } = require("../controllers/roomController");
 
-const { authenticateToken } = require("../middlewares/authMiddleware");
+// Oda özetleri (müşteri ekranı için)
+router.get("/summary", getRoomSummaries);
 
-// GET /api/rooms → Tüm odaları getir
+// Belirli odanın rezervasyon tarihleri (admin ekranı için)
+router.get("/:id/reservations", authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  const data = await pool.query(
+    `SELECT check_in, check_out FROM reservations WHERE room_id = $1 ORDER BY check_in`,
+    [id]
+  );
+  res.json(data.rows);
+});
+
+// Tüm odalar
 router.get("/", getAllRooms);
 
-// GET /api/rooms/:id → Tek oda getir (müşteri detay sayfası için)
+// Bugüne göre durum kontrolü
+router.get("/status", authenticateToken, getRoomsWithTodayStatus);
+
+// Tek oda getir
 router.get("/:id", getRoomById);
 
-// POST /api/rooms → Yeni oda oluştur (admin)
+// Oda CRUD (korumalı)
 router.post("/", authenticateToken, createRoom);
-
-// PUT /api/rooms/:id → Odayı güncelle (admin)
 router.put("/:id", authenticateToken, updateRoom);
-
-// DELETE /api/rooms/:id → Odayı sil (admin)
 router.delete("/:id", authenticateToken, deleteRoom);
+
+router.get('/:id/reservations/details', authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  const data = await pool.query(`
+    SELECT res.id, res.check_in, res.check_out, res.total_price,
+           c.full_name, c.email
+    FROM reservations res
+    JOIN customers c ON res.customer_id = c.id
+    WHERE res.room_id = $1
+    ORDER BY res.check_in
+  `, [id]);
+  res.json(data.rows);
+});
+
 
 module.exports = router;

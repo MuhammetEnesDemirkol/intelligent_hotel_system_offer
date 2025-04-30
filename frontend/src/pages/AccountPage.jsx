@@ -28,55 +28,37 @@ const AccountPage = () => {
   return (
     <div className="account-page">
       <div className="account-container">
-        <div className="account-header">
-          <h2 className="account-title">Profilim</h2>
-        </div>
+        <h2 className="account-title">Profilim</h2>
 
         <div className="profile-card">
-          <div className="profile-info">
-            <div className="profile-label">Ad Soyad</div>
-            <div className="profile-value">{user.full_name}</div>
-          </div>
-          <div className="profile-info">
-            <div className="profile-label">E-posta</div>
-            <div className="profile-value">{user.email}</div>
-          </div>
-          <div className="profile-info">
-            <div className="profile-label">Kullanıcı ID</div>
-            <div className="profile-value">{user.id}</div>
-          </div>
+          <p><strong>Ad Soyad:</strong> {user.full_name}</p>
+          <p><strong>E-posta:</strong> {user.email}</p>
+          <p><strong>Kullanıcı ID:</strong> {user.id}</p>
         </div>
 
-        <div className="divider"></div>
+        <div className="divider" />
 
-        <div className="reservations-title">Rezervasyon Geçmişim</div>
+        <h4 className="reservations-title">Rezervasyon Geçmişim</h4>
 
         {reservations.length === 0 ? (
-          <div className="no-reservations">
-            Henüz rezervasyon bulunmamaktadır.
-          </div>
+          <p className="no-reservations">Henüz rezervasyon bulunmamaktadır.</p>
         ) : (
-          <div className="reservations-table">
-            <table>
-              <thead>
-                <tr>
-                  <th>Oda No</th>
-                  <th>Giriş</th>
-                  <th>Çıkış</th>
-                  <th>Fiyat</th>
-                </tr>
-              </thead>
-              <tbody>
-                {reservations.map((r) => (
-                  <tr key={r.id}>
-                    <td>{r.room_number}</td>
-                    <td>{r.check_in}</td>
-                    <td>{r.check_out}</td>
-                    <td>{r.total_price} ₺</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="reservation-cards">
+            {reservations.map((r) => (
+              <div key={r.id} className="reservation-card">
+                <h5>Oda No: {r.room_number}</h5>
+                <p>Giriş: {r.check_in}</p>
+                <p>Çıkış: {r.check_out}</p>
+                <p>Tutar: {r.total_price} ₺</p>
+                <span className={`badge ${
+                  r.status === "checked-in" ? "bg-success" :
+                  r.status === "checked-out" ? "bg-secondary" :
+                  r.status === "canceled" ? "bg-danger" : "bg-warning text-dark"
+                }`}>
+                  {r.status}
+                </span>
+              </div>
+            ))}
           </div>
         )}
       </div>

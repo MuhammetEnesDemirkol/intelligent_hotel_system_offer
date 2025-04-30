@@ -23,6 +23,7 @@ import AdminHousekeepingPage from "./pages/AdminHousekeepingPage";
 import AdminRoomsStatusPage from "./pages/AdminRoomsStatusPage";
 import AdminPaymentsPage from "./pages/AdminPaymentsPage";
 import AdminRoomPricingPage from "./pages/AdminRoomPricingPage";
+import AdminRoomDetailPage from "./pages/AdminRoomDetailPage";
 
 function App() {
   return (
@@ -91,7 +92,15 @@ function App() {
                 <AdminRoomsStatusPage />
               </PrivateRoute>
             }
-          />
+            />
+            <Route
+              path="/admin/rooms/:id"
+              element={
+                <PrivateRoute>
+                  <AdminRoomDetailPage />
+                </PrivateRoute>
+              }
+            />
           <Route
             path="payments"
             element={

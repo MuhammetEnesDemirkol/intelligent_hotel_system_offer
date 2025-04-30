@@ -23,4 +23,11 @@ router.patch("/:id/status", authenticateToken, updateReservationStatus);
 
 router.get("/weekly", authenticateToken, getWeeklyReservations);
 
+router.delete('/:id', authenticateToken, async (req, res) => {
+  const { id } = req.params;
+  await pool.query(`DELETE FROM reservations WHERE id = $1`, [id]);
+  res.status(204).send();
+});
+
+
 module.exports = router;
