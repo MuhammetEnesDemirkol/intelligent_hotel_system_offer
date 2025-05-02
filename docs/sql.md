@@ -96,3 +96,29 @@ role VARCHAR(100) NOT NULL,
 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+--
+
+
+-- Personel Ekleme
+INSERT INTO personnel (name, phone, role) VALUES
+('Ayşe Demir', '05321234567', 'Temizlik'),
+('Mehmet Yılmaz', '05329876543', 'Temizlik'),
+('Fatma Kara', '05321112233', 'Temizlik'),
+('Ahmet Çelik', '05320001122', 'Temizlik'),
+('Elif Aydın', '05326667788', 'Temizlik'),
+('Mert Koç', '05325553344', 'Resepsiyonist'),
+('Zeynep Uslu', '05324445566', 'Kat Sorumlusu'),
+('Burak Şahin', '05327778899', 'Gece Müdürü'),
+('Gamze Yıldız', '05328889900', 'Mutfak Sorumlusu'),
+('Onur Arslan', '05323334455', 'Teknik Servis');
+
+
+-- Oda Ekleme
+INSERT INTO rooms (room_number, room_type, capacity, price_per_night, status, image_url, description, bed_type, has_ac, has_wifi, has_minibar, has_balcony, view) VALUES
+('101', 'Single', 1, 750.00, 'available', 'https://example.com/room101.jpg', 'Şehir manzaralı tek kişilik oda', 'Single', true, true, false, false, 'City'),
+('102', 'Double', 2, 1000.00, 'available', 'https://example.com/room102.jpg', 'Geniş çift kişilik oda', 'Double', true, true, true, false, 'Garden'),
+('201', 'Twin', 2, 950.00, 'maintenance', 'https://example.com/room201.jpg', 'İki ayrı yataklı konforlu oda', 'Twin', true, true, false, true, 'Pool'),
+('202', 'Suite', 4, 1800.00, 'reserved', 'https://example.com/room202.jpg', 'Lüks suit oda', 'King', true, true, true, true, 'Sea'),
+('301', 'Family', 4, 1500.00, 'available', 'https://example.com/room301.jpg', 'Çocuklu aileler için ideal', 'Queen', true, true, true, true, 'Mountain'),
+('302', 'Deluxe', 2, 1300.00, 'available', 'https://example.com/room302.jpg', 'Konforlu ve ferah oda', 'Double', true, true, true, false, 'City');

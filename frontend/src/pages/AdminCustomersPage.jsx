@@ -135,14 +135,12 @@ const AdminCustomersPage = () => {
               placeholder="Müşteri ara..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="admin-input"
             />
           </div>
           <div className="status-filter">
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="admin-input"
             >
               <option value="all">Tümü</option>
               <option value="active">Aktif</option>

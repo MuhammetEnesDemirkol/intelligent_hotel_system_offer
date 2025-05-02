@@ -1,51 +1,46 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "../styles/chatbot.css";
 
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([]);
+  const initialMessages = [
+    {
+      id: "welcome",
+      type: "system",
+      sender: "bot",
+      message: "👋 Merhaba! Otelimize hoş geldiniz. Size yardımcı olmak için buradayım.\n\n📌 Aşağıdaki konular hakkında bilgi alabilirsiniz:\n• Oda fiyatları\n• Rezervasyon ve iptal işlemleri\n• Giriş / çıkış saatleri\n• Spa, restoran, havuz\n• Ulaşım, otopark, evcil hayvan politikası\n\n📝 Lütfen sormak istediğiniz konuyu kısaca yazın.\nÖrnek: “Evcil hayvan kabul ediyor musunuz?” veya “Kahvaltı saat kaçta?”"
+    }
+  ];
+  const [messages, setMessages] = useState(initialMessages);
   const [inputMessage, setInputMessage] = useState("");
+  const [qaPairs, setQaPairs] = useState([]);
 
-  // Basit soru-cevap veritabanı
-  const qaPairs = {
-    "oda fiyatları":
-      "Oda fiyatlarımız mevsime göre değişmektedir. Standart oda 1000TL'den, Suit oda 2000TL'den başlamaktadır.",
-    kahvaltı:
-      "Kahvaltı hizmetimiz 07:00-10:00 saatleri arasında ücretsiz olarak sunulmaktadır.",
-    "check-in": "Check-in saatimiz 14:00'tür.",
-    "check-out": "Check-out saatimiz 12:00'dir.",
-    havuz:
-      "Otelimizde açık ve kapalı yüzme havuzu bulunmaktadır. Havuzlarımız 08:00-22:00 saatleri arasında hizmet vermektedir.",
-    wifi: "Otelimizin her alanında ücretsiz Wi-Fi hizmeti verilmektedir.",
-    otopark: "Otelimizde ücretsiz otopark hizmeti bulunmaktadır.",
-    spa: "Spa merkezimiz 09:00-21:00 saatleri arasında hizmet vermektedir.",
-    restoran: "Restoranımız 07:00-23:00 saatleri arasında hizmet vermektedir.",
-    "toplantı salonu":
-      "Otelimizde farklı kapasitelerde 5 adet toplantı salonu bulunmaktadır.",
-  };
+  // Backend'den soru-cevapları çek
+  useEffect(() => {
+    axios.get("http://localhost:5000/api/chatbot/answers")
+      .then(res => setQaPairs(res.data))
+      .catch(() => setQaPairs([]));
+  }, []);
+
+  function findAnswer(question) {
+    question = question.toLowerCase();
+    for (const pair of qaPairs) {
+      for (const keyword of pair.keywords) {
+        if (question.includes(keyword)) {
+          return pair.answer;
+        }
+      }
+    }
+    return "Üzgünüm, bu konuda bilgi veremiyorum. Lütfen resepsiyonu arayınız.";
+  }
 
   const handleSendMessage = () => {
     if (!inputMessage.trim()) return;
 
-    // Kullanıcı mesajını ekle
     const newMessages = [...messages, { text: inputMessage, sender: "user" }];
-
-    // Bot cevabını bul
-    let botResponse =
-      "Üzgünüm, bu konuda bilgi veremiyorum. Lütfen resepsiyonu arayınız.";
-
-    // Soruyu küçük harfe çevir ve anahtar kelimeleri ara
-    const question = inputMessage.toLowerCase();
-    for (const [key, value] of Object.entries(qaPairs)) {
-      if (question.includes(key)) {
-        botResponse = value;
-        break;
-      }
-    }
-
-    // Bot cevabını ekle
+    const botResponse = findAnswer(inputMessage);
     newMessages.push({ text: botResponse, sender: "bot" });
-
     setMessages(newMessages);
     setInputMessage("");
   };
@@ -67,7 +62,7 @@ const ChatBot = () => {
           <div className="chatbot-messages">
             {messages.map((message, index) => (
               <div key={index} className={`message ${message.sender}`}>
-                {message.text}
+                {message.message || message.text}
               </div>
             ))}
           </div>

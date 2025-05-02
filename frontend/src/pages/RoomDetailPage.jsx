@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import ReservationForm from "../components/ReservationForm";
-import "../styles/room-detail.css";
+import "../styles/user.css";
 
 const RoomDetailPage = () => {
   const { id } = useParams();
@@ -117,6 +117,13 @@ const RoomDetailPage = () => {
     setShowModal(true);
   };
 
+  // Bugünün tarihi (sadece yıl-ay-gün)
+  const today = new Date();
+  const todayString = today.toISOString().split("T")[0];
+  // availability dizisinde bugünün dolu olup olmadığını bul
+  const todayAvailability = availability.find(avail => avail.date === todayString);
+  const isTodayReserved = todayAvailability ? !todayAvailability.is_available : false;
+
   if (loading) {
     return (
       <div className="loading-container">
@@ -169,8 +176,8 @@ const RoomDetailPage = () => {
         <div className="room-title-section">
           <h1>Oda {room.room_number}</h1>
           <div className="room-status-badge">
-            <span className={`status ${room.status.toLowerCase()}`}>
-              {room.status === "available" ? "Müsait" : "Dolu"}
+            <span className={`status ${isTodayReserved ? "dolu" : "available"}`}>
+              {isTodayReserved ? "Dolu" : "Müsait"}
             </span>
           </div>
         </div>

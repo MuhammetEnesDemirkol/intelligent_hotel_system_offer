@@ -23,11 +23,11 @@ const AdminRoomsPage = () => {
 
   // Seçenek listeleri
   const roomTypes = [
-    "Standart Oda",
-    "Deluxe Oda",
-    "Suit Oda",
-    "Aile Odası",
-    "Kral Dairesi",
+    "Single",
+    "Double",
+    "Twin",
+    "Suite",
+    "Family"
   ];
 
   const bedTypes = [
@@ -47,9 +47,9 @@ const AdminRoomsPage = () => {
   ];
 
   const statusOptions = [
-    { value: "available", label: "Müsait", color: "green" },
-    { value: "reserved", label: "Rezerve", color: "red" },
-    { value: "maintenance", label: "Bakımda", color: "orange" },
+    { value: "available", label: "Müsait" },
+    { value: "occupied", label: "Dolu" },
+    { value: "maintenance", label: "Bakımda" }
   ];
 
   const [newRoom, setNewRoom] = useState({
@@ -443,43 +443,38 @@ const AdminRoomsPage = () => {
         <h2 className="admin-rooms-title">Oda Yönetimi</h2>
 
         {/* Arama ve Filtreleme */}
-        <div className="admin-filters">
-          <div className="search-box">
-            <input
-              type="text"
-              placeholder="Oda numarası ara..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-          <div className="filter-box">
-            <select
-              value={filters.roomType}
-              onChange={(e) =>
-                setFilters({ ...filters, roomType: e.target.value })
-              }
-            >
-              <option value="">Tüm Oda Tipleri</option>
-              {roomTypes.map((type) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
-            </select>
-            <select
-              value={filters.status}
-              onChange={(e) =>
-                setFilters({ ...filters, status: e.target.value })
-              }
-            >
-              <option value="">Tüm Durumlar</option>
-              {statusOptions.map((status) => (
-                <option key={status.value} value={status.value}>
-                  {status.label}
-                </option>
-              ))}
-            </select>
-          </div>
+        <div className="flex gap-4 mb-4">
+          <input
+            type="text"
+            placeholder="Oda numarasına göre ara..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="flex-1 p-2 border border-gray-300 rounded"
+          />
+          <select
+            value={filters.roomType}
+            onChange={(e) => setFilters({ ...filters, roomType: e.target.value })}
+            className="p-2 border border-gray-300 rounded min-w-[200px]"
+          >
+            <option value="">Tüm Oda Tipleri</option>
+            {roomTypes.map((type) => (
+              <option key={type} value={type}>
+                {type}
+              </option>
+            ))}
+          </select>
+          <select
+            value={filters.status}
+            onChange={(e) => setFilters({ ...filters, status: e.target.value })}
+            className="p-2 border border-gray-300 rounded min-w-[200px]"
+          >
+            <option value="">Tüm Durumlar</option>
+            {statusOptions.map((status) => (
+              <option key={status.value} value={status.value}>
+                {status.label}
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* Toplu İşlem Butonları */}
@@ -508,9 +503,14 @@ const AdminRoomsPage = () => {
           </div>
         )}
 
-        <button className="admin-add-btn" onClick={() => setShowAddModal(true)}>
-          Yeni Oda Ekle
-        </button>
+<button
+  className="px-4 py-2 rounded mb-4"
+  style={{ backgroundColor: '#1a237e', color: 'white' }}
+  onClick={() => setShowAddModal(true)}
+>
+  Yeni Oda Ekle
+</button>
+
 
         <table className="admin-table">
           <thead>

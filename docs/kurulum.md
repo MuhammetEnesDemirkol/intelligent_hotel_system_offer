@@ -71,6 +71,13 @@ Eğer her şey doğruysa:
 
 ## 3⃣️ Admin Girişi
 
+node -e "require('bcrypt').hash('admin123', 10).then(console.log)"
+
+INSERT INTO admin_users (username, password_hash)
+VALUES ('admin', '$2b$10$KmC4Tl0R.a6QdpHEv6Iyj.vTjhNYei7k1MGlzYyfPWoybLftzNXsu');
+
+
+
 Test kullanıcı bilgileri:
 ```json
 {

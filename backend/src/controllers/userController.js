@@ -72,13 +72,13 @@ const getMe = async (req, res) => {
 
 // Kullanıcı bilgilerini güncelle
 const updateUser = async (req, res) => {
-  const { id } = req.params;
+  const userId = req.user.id;
   const { full_name, email, phone } = req.body;
 
   try {
     const result = await pool.query(
       "UPDATE users SET full_name = $1, email = $2, phone = $3 WHERE id = $4 RETURNING *",
-      [full_name, email, phone, id]
+      [full_name, email, phone, userId]
     );
 
     if (result.rows.length === 0) {
