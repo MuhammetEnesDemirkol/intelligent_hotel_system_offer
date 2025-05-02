@@ -4,10 +4,10 @@ import "../styles/navbar.css";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const token = localStorage.getItem("userToken");
+  const token = localStorage.getItem("token");
 
   const handleLogout = () => {
-    localStorage.removeItem("userToken");
+    localStorage.removeItem("token");
     navigate("/login");
   };
 

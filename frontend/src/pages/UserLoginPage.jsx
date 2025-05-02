@@ -21,7 +21,7 @@ const UserLoginPage = () => {
         "http://localhost:5000/api/users/login",
         formData
       );
-      localStorage.setItem("userToken", response.data.token);
+      localStorage.setItem("token", response.data.token);
       alert("Giriş başarılı!");
       navigate("/");
     } catch (error) {

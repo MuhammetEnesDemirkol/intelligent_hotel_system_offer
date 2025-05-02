@@ -1,136 +1,388 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "../styles/user.css";
+import { useParams, useNavigate } from "react-router-dom";
+import ReservationForm from "../components/ReservationForm";
+import "../styles/room-detail.css";
 
 const RoomDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-
   const [room, setRoom] = useState(null);
-  const [reservations, setReservations] = useState([]);
-  const [formData, setFormData] = useState({
-    check_in: "",
-    check_out: "",
-  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [availability, setAvailability] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [modalMessage, setModalMessage] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [activeTab, setActiveTab] = useState("details");
 
   useEffect(() => {
-    // Oda bilgisi
-    axios
-      .get(`http://localhost:5000/api/rooms/${id}`)
-      .then((res) => setRoom(res.data))
-      .catch((err) => console.error("Oda bilgisi alınamadı", err));
+    const checkAuth = () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setIsAuthenticated(false);
+        return;
+      }
 
-    // Oda rezervasyonları
-    axios
-      .get(`http://localhost:5000/api/rooms/${id}/reservations`)
-      .then((res) => setReservations(res.data))
-      .catch((err) => console.error("Rezervasyonlar alınamadı", err));
-  }, [id]);
+      axios
+        .get("http://localhost:5000/api/users/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then(() => {
+          setIsAuthenticated(true);
+        })
+        .catch(() => {
+          localStorage.removeItem("token");
+          setIsAuthenticated(false);
+        });
+    };
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+    checkAuth();
 
-  const handleReservation = () => {
-    const token = localStorage.getItem("userToken");
-    if (!token) {
-      alert("Rezervasyon yapmak için giriş yapmalısınız.");
-      navigate("/login");
+    const fetchRoom = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/api/rooms/${id}`
+        );
+        setRoom(response.data);
+      } catch (err) {
+        setError("Oda bilgileri yüklenemedi");
+        console.error("Oda bilgileri yüklenirken hata:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const fetchAvailability = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/api/rooms/${id}/availability`,
+          {
+            params: {
+              month: selectedMonth + 1,
+              year: selectedYear,
+            },
+          }
+        );
+        setAvailability(response.data);
+      } catch (err) {
+        console.error("Müsaitlik bilgileri yüklenirken hata:", err);
+      }
+    };
+
+    fetchRoom();
+    fetchAvailability();
+  }, [id, selectedMonth, selectedYear]);
+
+  const handleReservationClick = () => {
+    if (!isAuthenticated) {
+      navigate("/login", { state: { from: `/rooms/${id}` } });
       return;
     }
-
-    navigate("/reservation", {
-      state: {
-        roomId: room.id,
-        checkIn: formData.check_in,
-        checkOut: formData.check_out,
-        price: room.price_per_night,
-      },
-    });
   };
 
-  if (!room) return <div className="room-detail-page">Yükleniyor...</div>;
+  const handleMonthChange = (increment) => {
+    const newMonth = selectedMonth + increment;
+    if (newMonth < 0) {
+      setSelectedMonth(11);
+      setSelectedYear(selectedYear - 1);
+    } else if (newMonth > 11) {
+      setSelectedMonth(0);
+      setSelectedYear(selectedYear + 1);
+    } else {
+      setSelectedMonth(newMonth);
+    }
+  };
+
+  const getDaysInMonth = (month, year) => {
+    return new Date(year, month + 1, 0).getDate();
+  };
+
+  const getFirstDayOfMonth = (month, year) => {
+    return new Date(year, month, 1).getDay();
+  };
+
+  const isDateAvailable = (date) => {
+    const dateString = date.toISOString().split("T")[0];
+    const availabilityData = availability.find(
+      (avail) => avail.date === dateString
+    );
+    return availabilityData ? availabilityData.is_available : true;
+  };
+
+  const handleReservationSuccess = () => {
+    setModalMessage("Rezervasyon başarıyla oluşturuldu!");
+    setShowModal(true);
+  };
+
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Yükleniyor...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="error-container">
+        <i className="fas fa-exclamation-circle"></i>
+        <p>{error}</p>
+        <button onClick={() => window.location.reload()}>Tekrar Dene</button>
+      </div>
+    );
+  }
+
+  if (!room) {
+    return (
+      <div className="not-found-container">
+        <i className="fas fa-search"></i>
+        <p>Oda bulunamadı</p>
+        <button onClick={() => navigate("/rooms")}>Odalara Dön</button>
+      </div>
+    );
+  }
+
+  const daysInMonth = getDaysInMonth(selectedMonth, selectedYear);
+  const firstDayOfMonth = getFirstDayOfMonth(selectedMonth, selectedYear);
+  const monthNames = [
+    "Ocak",
+    "Şubat",
+    "Mart",
+    "Nisan",
+    "Mayıs",
+    "Haziran",
+    "Temmuz",
+    "Ağustos",
+    "Eylül",
+    "Ekim",
+    "Kasım",
+    "Aralık",
+  ];
 
   return (
-    <div className="room-detail-page">
-      <div className="room-detail-container">
-        <div className="room-detail-header">
-          <h2 className="room-detail-title">Oda No: {room.room_number}</h2>
-        </div>
-
-        <img
-          src={room.image_url || "/images/room-1.png"}
-          className="room-detail-image"
-          alt={`Oda ${room.room_number}`}
-        />
-
-        <div className="room-detail-info">
-          <div className="room-detail-item">
-            <div className="room-detail-label">Tür</div>
-            <div className="room-detail-value">{room.room_type}</div>
-          </div>
-          <div className="room-detail-item">
-            <div className="room-detail-label">Kapasite</div>
-            <div className="room-detail-value">{room.capacity} kişi</div>
-          </div>
-          <div className="room-detail-item">
-            <div className="room-detail-label">Fiyat</div>
-            <div className="room-detail-price">
-              {room.price_per_night} ₺ / gece
-            </div>
-          </div>
-          <div className="room-detail-item">
-            <div className="room-detail-label">Açıklama</div>
-            <div className="room-detail-value">{room.description}</div>
+    <div className="room-detail-container">
+      <div className="room-header">
+        <div className="room-title-section">
+          <h1>Oda {room.room_number}</h1>
+          <div className="room-status-badge">
+            <span className={`status ${room.status.toLowerCase()}`}>
+              {room.status === "available" ? "Müsait" : "Dolu"}
+            </span>
           </div>
         </div>
-
-        {/* Rezerve Günler */}
-        <div className="room-reserved-dates mt-4">
-          <h5>Rezerve Günler</h5>
-          {reservations.length === 0 ? (
-            <p className="text-muted">Bu odada henüz rezervasyon yok.</p>
-          ) : (
-            <ul className="list-group">
-              {reservations.map((r, i) => (
-                <li key={i} className="list-group-item">
-                  {r.check_in.split("T")[0]} → {r.check_out.split("T")[0]}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-
-        <div className="reservation-form-card">
-          <h4 className="reservation-form-title">Bu Odayı Rezerve Et</h4>
-          <div className="reservation-form-group">
-            <label className="reservation-form-label">Giriş Tarihi</label>
-            <input
-              type="date"
-              className="reservation-form-input"
-              name="check_in"
-              value={formData.check_in}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="reservation-form-group">
-            <label className="reservation-form-label">Çıkış Tarihi</label>
-            <input
-              type="date"
-              className="reservation-form-input"
-              name="check_out"
-              value={formData.check_out}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <button className="reservation-button" onClick={handleReservation}>
-            Rezervasyon Yap
-          </button>
+        <div className="room-price-tag">
+          <span className="price">{room.price_per_night} ₺</span>
+          <span className="per-night">/gece</span>
         </div>
       </div>
+
+      <div className="room-content">
+        <div className="room-gallery">
+          <div className="main-image">
+            <img src={"/images/room-1.png"} alt={`Oda ${room.room_number}`} />
+          </div>
+        </div>
+
+        <div className="room-info-section">
+          <div className="tabs">
+            <button
+              className={`tab ${activeTab === "details" ? "active" : ""}`}
+              onClick={() => setActiveTab("details")}
+            >
+              <i className="fas fa-info-circle"></i> Detaylar
+            </button>
+            <button
+              className={`tab ${activeTab === "availability" ? "active" : ""}`}
+              onClick={() => setActiveTab("availability")}
+            >
+              <i className="fas fa-calendar-alt"></i> Müsaitlik
+            </button>
+            <button
+              className={`tab ${activeTab === "reservation" ? "active" : ""}`}
+              onClick={() => setActiveTab("reservation")}
+            >
+              <i className="fas fa-calendar-check"></i> Rezervasyon
+            </button>
+          </div>
+
+          {activeTab === "details" && (
+            <div className="tab-content">
+              <div className="room-details">
+                <div className="detail-group">
+                  <h3>
+                    <i className="fas fa-bed"></i> Oda Bilgileri
+                  </h3>
+                  <div className="detail-item">
+                    <span className="label">Oda Tipi:</span>
+                    <span className="value">{room.room_type}</span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="label">Kapasite:</span>
+                    <span className="value">{room.capacity} kişi</span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="label">Yatak Tipi:</span>
+                    <span className="value">{room.bed_type}</span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="label">Manzara:</span>
+                    <span className="value">{room.view}</span>
+                  </div>
+                </div>
+
+                <div className="amenities-group">
+                  <h3>
+                    <i className="fas fa-star"></i> Oda Özellikleri
+                  </h3>
+                  <div className="amenities-grid">
+                    {room.has_ac && (
+                      <div className="amenity-item">
+                        <i className="fas fa-snowflake"></i>
+                        <span>Klima</span>
+                      </div>
+                    )}
+                    {room.has_wifi && (
+                      <div className="amenity-item">
+                        <i className="fas fa-wifi"></i>
+                        <span>Wi-Fi</span>
+                      </div>
+                    )}
+                    {room.has_minibar && (
+                      <div className="amenity-item">
+                        <i className="fas fa-wine-bottle"></i>
+                        <span>Minibar</span>
+                      </div>
+                    )}
+                    {room.has_balcony && (
+                      <div className="amenity-item">
+                        <i className="fas fa-door-open"></i>
+                        <span>Balkon</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "availability" && (
+            <div className="tab-content">
+              <div className="availability-section">
+                <div className="calendar-controls">
+                  <button
+                    onClick={() => handleMonthChange(-1)}
+                    className="calendar-nav-btn"
+                  >
+                    ←
+                  </button>
+                  <span className="calendar-title">
+                    {monthNames[selectedMonth]} {selectedYear}
+                  </span>
+                  <button
+                    onClick={() => handleMonthChange(1)}
+                    className="calendar-nav-btn"
+                  >
+                    →
+                  </button>
+                </div>
+
+                <div className="calendar">
+                  <div className="calendar-header">
+                    <span>Pzt</span>
+                    <span>Sal</span>
+                    <span>Çar</span>
+                    <span>Per</span>
+                    <span>Cum</span>
+                    <span>Cmt</span>
+                    <span>Paz</span>
+                  </div>
+                  <div className="calendar-body">
+                    {Array.from({ length: firstDayOfMonth }).map((_, index) => (
+                      <div
+                        key={`empty-${index}`}
+                        className="calendar-day empty"
+                      ></div>
+                    ))}
+                    {Array.from({ length: daysInMonth }).map((_, index) => {
+                      const date = new Date(
+                        selectedYear,
+                        selectedMonth,
+                        index + 1
+                      );
+                      const isAvailable = isDateAvailable(date);
+                      return (
+                        <div
+                          key={`day-${index}`}
+                          className={`calendar-day ${
+                            isAvailable ? "available" : "unavailable"
+                          }`}
+                        >
+                          {index + 1}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+                <div className="availability-legend">
+                  <div className="legend-item">
+                    <div className="legend-color available"></div>
+                    <span>Müsait</span>
+                  </div>
+                  <div className="legend-item">
+                    <div className="legend-color unavailable"></div>
+                    <span>Dolu</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "reservation" && (
+            <div className="tab-content">
+              <div className="reservation-section">
+                {isAuthenticated ? (
+                  <ReservationForm
+                    roomId={room.id}
+                    roomPrice={room.price_per_night}
+                    onReservationSuccess={handleReservationSuccess}
+                  />
+                ) : (
+                  <div className="auth-required">
+                    <i className="fas fa-lock"></i>
+                    <p>Rezervasyon yapmak için giriş yapmalısınız.</p>
+                    <button
+                      onClick={handleReservationClick}
+                      className="login-btn"
+                    >
+                      Giriş Yap
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {showModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <i className="fas fa-check-circle success-icon"></i>
+            <h3>Başarılı!</h3>
+            <p>{modalMessage}</p>
+            <button
+              className="modal-close-btn"
+              onClick={() => setShowModal(false)}
+            >
+              Tamam
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

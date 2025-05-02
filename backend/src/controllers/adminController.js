@@ -36,7 +36,7 @@ const login = async (req, res) => {
 const getDashboardStats = async (req, res) => {
   try {
     const roomCount = await pool.query("SELECT COUNT(*) FROM rooms");
-    const customerCount = await pool.query("SELECT COUNT(*) FROM customers");
+    const userCount = await pool.query("SELECT COUNT(*) FROM users");
     const reservationCount = await pool.query(
       "SELECT COUNT(*) FROM reservations"
     );
@@ -44,7 +44,7 @@ const getDashboardStats = async (req, res) => {
 
     res.json({
       rooms: parseInt(roomCount.rows[0].count),
-      customers: parseInt(customerCount.rows[0].count),
+      users: parseInt(userCount.rows[0].count),
       reservations: parseInt(reservationCount.rows[0].count),
       totalPayments: parseFloat(paymentSum.rows[0].sum) || 0,
     });

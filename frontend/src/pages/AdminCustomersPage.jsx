@@ -26,7 +26,7 @@ const AdminCustomersPage = () => {
           Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
         },
       });
-      fetchRooms(); // Yeniden yükle
+      fetchCustomers(); // Yeniden yükle
     } catch (error) {
       console.error("Oda silinemedi:", error);
     }

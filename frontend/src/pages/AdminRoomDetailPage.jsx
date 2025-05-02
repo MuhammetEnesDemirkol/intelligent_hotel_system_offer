@@ -21,24 +21,30 @@ const AdminRoomDetailPage = () => {
     const token = localStorage.getItem("adminToken");
 
     // Takvim verileri
-    const resDates = await axios.get(`http://localhost:5000/api/rooms/${id}/reservations`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const resDates = await axios.get(
+      `http://localhost:5000/api/rooms/${id}/reservations`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
 
     const dateList = [];
     resDates.data.forEach((r) => {
       const start = new Date(r.check_in);
       const end = new Date(r.check_out);
-      for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+      for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)) {
         dateList.push(new Date(d));
       }
     });
     setBookedDates(dateList);
 
     // Rezervasyon detayları
-    const resList = await axios.get(`http://localhost:5000/api/rooms/${id}/reservations/details`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const resList = await axios.get(
+      `http://localhost:5000/api/rooms/${id}/reservations/details`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
     setReservations(resList.data);
   };
 
@@ -48,33 +54,40 @@ const AdminRoomDetailPage = () => {
 
   const tileClassName = ({ date, view }) => {
     if (view === "month") {
-      const found = bookedDates.find((d) => d.toDateString() === date.toDateString());
-      return found ? "booked" : null;
+      const found = bookedDates.find(
+        (d) => d.toDateString() === date.toDateString()
+      );
+      return found ? "react-calendar__tile--booked" : null;
     }
   };
 
   const handleCancel = async (reservationId) => {
-    const confirmed = window.confirm("Bu rezervasyonu iptal etmek istediğinize emin misiniz?");
+    const confirmed = window.confirm(
+      "Bu rezervasyonu iptal etmek istediğinize emin misiniz?"
+    );
     if (!confirmed) return;
 
     const token = localStorage.getItem("adminToken");
-    await axios.delete(`http://localhost:5000/api/reservations/${reservationId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    await axios.delete(
+      `http://localhost:5000/api/reservations/${reservationId}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
     await fetchData();
   };
 
   const handleCreateReservation = async () => {
     const token = localStorage.getItem("adminToken");
     const { full_name, email, phone, check_in, check_out } = newRes;
-  
+
     const dayCount =
       (new Date(check_out) - new Date(check_in)) / (1000 * 60 * 60 * 24);
-  
+
     if (dayCount <= 0) {
       return alert("Geçerli bir tarih aralığı seçin.");
     }
-  
+
     try {
       // 1. Tarih çakışma kontrolü
       const resvCheck = await axios.get(
@@ -83,7 +96,7 @@ const AdminRoomDetailPage = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-  
+
       const isOverlap = resvCheck.data.some((r) => {
         const rStart = new Date(r.check_in);
         const rEnd = new Date(r.check_out);
@@ -91,19 +104,22 @@ const AdminRoomDetailPage = () => {
         const nEnd = new Date(check_out);
         return nStart <= rEnd && nEnd >= rStart;
       });
-  
+
       if (isOverlap) {
         return alert("Seçilen tarihlerde bu odada zaten rezervasyon var.");
       }
-  
+
       // 2. Aynı müşteri var mı kontrol et (email ile)
       let customer_id;
-      const customerSearch = await axios.get("http://localhost:5000/api/customers", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-  
+      const customerSearch = await axios.get(
+        "http://localhost:5000/api/customers",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
       const existing = customerSearch.data.find((c) => c.email === email);
-  
+
       if (existing) {
         customer_id = existing.id;
       } else {
@@ -114,14 +130,14 @@ const AdminRoomDetailPage = () => {
         );
         customer_id = newCustomer.data.id;
       }
-  
+
       // 3. Oda fiyatı
       const room = await axios.get(`http://localhost:5000/api/rooms/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-  
+
       const total_price = dayCount * room.data.price_per_night;
-  
+
       // 4. Rezervasyon oluştur
       await axios.post(
         "http://localhost:5000/api/reservations",
@@ -134,7 +150,7 @@ const AdminRoomDetailPage = () => {
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-  
+
       alert("Rezervasyon başarıyla eklendi.");
       setNewRes({
         full_name: "",
@@ -149,7 +165,6 @@ const AdminRoomDetailPage = () => {
       alert("Bir hata oluştu.");
     }
   };
-  
 
   return (
     <div className="container mt-5">
@@ -177,7 +192,8 @@ const AdminRoomDetailPage = () => {
           <tbody>
             {reservations.map((r) => {
               const days =
-                (new Date(r.check_out) - new Date(r.check_in)) / (1000 * 60 * 60 * 24);
+                (new Date(r.check_out) - new Date(r.check_in)) /
+                (1000 * 60 * 60 * 24);
               return (
                 <tr key={r.id}>
                   <td>
@@ -213,7 +229,9 @@ const AdminRoomDetailPage = () => {
               className="form-control"
               placeholder="Ad Soyad"
               value={newRes.full_name}
-              onChange={(e) => setNewRes({ ...newRes, full_name: e.target.value })}
+              onChange={(e) =>
+                setNewRes({ ...newRes, full_name: e.target.value })
+              }
             />
           </div>
           <div className="col-md-4 mb-2">
@@ -240,7 +258,9 @@ const AdminRoomDetailPage = () => {
               type="date"
               className="form-control"
               value={newRes.check_in}
-              onChange={(e) => setNewRes({ ...newRes, check_in: e.target.value })}
+              onChange={(e) =>
+                setNewRes({ ...newRes, check_in: e.target.value })
+              }
             />
           </div>
           <div className="col-md-6 mb-2">
@@ -249,12 +269,17 @@ const AdminRoomDetailPage = () => {
               type="date"
               className="form-control"
               value={newRes.check_out}
-              onChange={(e) => setNewRes({ ...newRes, check_out: e.target.value })}
+              onChange={(e) =>
+                setNewRes({ ...newRes, check_out: e.target.value })
+              }
             />
           </div>
         </div>
 
-        <button className="btn btn-success mt-3" onClick={handleCreateReservation}>
+        <button
+          className="btn btn-success mt-3"
+          onClick={handleCreateReservation}
+        >
           Kaydet
         </button>
       </div>

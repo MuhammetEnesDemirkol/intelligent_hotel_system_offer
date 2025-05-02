@@ -9,7 +9,7 @@ const PaymentPage = () => {
 
   const handlePayment = async () => {
     try {
-      const token = localStorage.getItem("userToken");
+      const token = localStorage.getItem("token");
       await axios.post(
         "http://localhost:5000/api/payments",
         {

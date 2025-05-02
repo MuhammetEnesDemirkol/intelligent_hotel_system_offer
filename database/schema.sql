@@ -5,9 +5,15 @@ CREATE TABLE rooms (
     room_type VARCHAR(50) NOT NULL,
     capacity INTEGER NOT NULL,
     price_per_night DECIMAL(10,2) NOT NULL,
-    status VARCHAR(20) DEFAULT 'available' -- available, occupied, cleaning
-    image_url TEXT;
-
+    status VARCHAR(20) DEFAULT 'available', -- available, occupied, cleaning
+    image_url TEXT,
+    description TEXT,
+    bed_type VARCHAR(50),
+    has_ac BOOLEAN DEFAULT false,
+    has_wifi BOOLEAN DEFAULT false,
+    has_minibar BOOLEAN DEFAULT false,
+    has_balcony BOOLEAN DEFAULT false,
+    view VARCHAR(50)
 );
 
 -- Customers Table

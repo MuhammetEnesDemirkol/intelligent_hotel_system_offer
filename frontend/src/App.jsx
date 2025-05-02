@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import RoomsPage from "./pages/RoomsPage";
 import Navbar from "./components/Navbar";
-import ReservationPage from "./pages/ReservationPage";
 import AdminLoginPage from "./pages/AdminLoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import UserLoginPage from "./pages/UserLoginPage";
@@ -33,7 +32,6 @@ function App() {
           <Route index element={<HomePage />} />
           <Route path="rooms" element={<RoomsPage />} />
           <Route path="rooms/:id" element={<RoomDetailPage />} />
-          <Route path="reservation" element={<ReservationPage />} />
           <Route path="register" element={<RegisterPage />} />
           <Route path="login" element={<UserLoginPage />} />
           <Route path="account" element={<AccountPage />} />
@@ -92,15 +90,15 @@ function App() {
                 <AdminRoomsStatusPage />
               </PrivateRoute>
             }
-            />
-            <Route
-              path="/admin/rooms/:id"
-              element={
-                <PrivateRoute>
-                  <AdminRoomDetailPage />
-                </PrivateRoute>
-              }
-            />
+          />
+          <Route
+            path="/admin/rooms/:id"
+            element={
+              <PrivateRoute>
+                <AdminRoomDetailPage />
+              </PrivateRoute>
+            }
+          />
           <Route
             path="payments"
             element={

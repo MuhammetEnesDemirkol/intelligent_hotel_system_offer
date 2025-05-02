@@ -1,28 +1,23 @@
-const express = require('express');
-const { getAllCustomers, createCustomer, updateCustomer, deleteCustomer } = require('../controllers/customerController');
-const { authenticateToken } = require('../middlewares/authMiddleware');
+const express = require("express");
 const router = express.Router();
+const authenticateToken = require("../middleware/authMiddleware");
+const {
+  getAllCustomers,
+  createCustomer,
+  updateCustomer,
+  deleteCustomer,
+} = require("../controllers/customerController");
 
-router.get('/', getAllCustomers);
+// Tüm müşterileri getir
+router.get("/", authenticateToken, getAllCustomers);
 
-router.post('/', authenticateToken, createCustomer);
+// Yeni müşteri oluştur
+router.post("/", authenticateToken, createCustomer);
 
-router.put('/:id', authenticateToken, updateCustomer);
+// Müşteri güncelle
+router.put("/:id", authenticateToken, updateCustomer);
 
-router.delete('/:id', authenticateToken, deleteCustomer);
-
-
-
-// GET /customers → Tüm müşterileri getir
-router.get('/', getAllCustomers);
-
-// POST /customers → Yeni müşteri ekle
-router.post('/', createCustomer);
-
-// PUT /customers/:id → Müşteriyi güncelle
-router.put('/:id', updateCustomer);
-
-// DELETE /customers/:id → Müşteriyi sil
-router.delete('/:id', deleteCustomer);
+// Müşteri sil
+router.delete("/:id", authenticateToken, deleteCustomer);
 
 module.exports = router;

@@ -11,7 +11,7 @@ const AdminHousekeepingPage = () => {
     const res = await axios.get("http://localhost:5000/api/housekeeping", {
       headers: { Authorization: `Bearer ${token}` },
     });
-    setRooms(res.data);    
+    setRooms(res.data);
   };
 
   useEffect(() => {
@@ -24,10 +24,31 @@ const AdminHousekeepingPage = () => {
       status,
       last_cleaned: status === "clean" ? new Date().toISOString() : null,
     };
-    await axios.put(`http://localhost:5000/api/housekeeping/${room_id}`, payload, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    fetchData();
+    try {
+      const response = await axios.put(
+        `http://localhost:5000/api/housekeeping/${room_id}`,
+        payload,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (response.status === 200) {
+        fetchData();
+      }
+    } catch (error) {
+      console.error("Status update failed:", error);
+      if (error.response) {
+        // Backend'den gelen hata mesajını göster
+        alert(
+          `Hata: ${
+            error.response.data.error || "Durum güncellenirken bir hata oluştu."
+          }`
+        );
+      } else {
+        alert("Durum güncellenirken bir hata oluştu.");
+      }
+    }
   };
 
   const handleAssignPerson = (room_id, name) => {
@@ -76,7 +97,9 @@ const AdminHousekeepingPage = () => {
                     className="form-control"
                     placeholder="Personel adı"
                     value={personel[room.room_id] || ""}
-                    onChange={(e) => handleAssignPerson(room.room_id, e.target.value)}
+                    onChange={(e) =>
+                      handleAssignPerson(room.room_id, e.target.value)
+                    }
                   />
                   <button
                     className="btn btn-outline-primary"
@@ -89,6 +112,13 @@ const AdminHousekeepingPage = () => {
                 </div>
 
                 {/* Temizlik Kontrolleri */}
+                <button
+                  className="btn btn-outline-danger w-100 mb-2"
+                  disabled={room.status === "dirty"}
+                  onClick={() => handleStatusUpdate(room.room_id, "dirty")}
+                >
+                  Kirli Olarak İşaretle
+                </button>
                 <button
                   className="btn btn-outline-warning w-100 mb-2"
                   disabled={room.status === "cleaning"}
