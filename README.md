@@ -92,6 +92,6 @@ To contribute to this project, follow these steps:
 
 
 ## 👨‍💻 Developer
-**Muhammet Enes DEMIRKOL** – Frontend Developer  
+**Muhammet Enes DEMIRKOL** 
 [www.muhammetenesdemirkol.com](https://www.muhammetenesdemirkol.com)
 
