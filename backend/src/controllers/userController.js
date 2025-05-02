@@ -72,35 +72,22 @@ const getMe = async (req, res) => {
 
 // Kullanıcı bilgilerini güncelle
 const updateUser = async (req, res) => {
-  const userId = req.user.id;
-  const { full_name, email, phone, address, identity_number } = req.body;
+  const { id } = req.params;
+  const { full_name, email, phone } = req.body;
 
   try {
-    // E-posta kontrolü (kendi e-postası hariç)
-    const existingUser = await pool.query(
-      "SELECT * FROM users WHERE email = $1 AND id != $2",
-      [email, userId]
-    );
-    if (existingUser.rows.length > 0) {
-      return res
-        .status(400)
-        .json({ error: "Bu e-posta adresi zaten kullanılıyor" });
-    }
-
-    const { rows } = await pool.query(
-      `UPDATE users
-       SET full_name = $1, email = $2, phone = $3, address = $4, identity_number = $5
-       WHERE id = $6 RETURNING *`,
-      [full_name, email, phone, address, identity_number, userId]
+    const result = await pool.query(
+      "UPDATE users SET full_name = $1, email = $2, phone = $3 WHERE id = $4 RETURNING *",
+      [full_name, email, phone, id]
     );
 
-    if (rows.length === 0) {
+    if (result.rows.length === 0) {
       return res.status(404).json({ error: "Kullanıcı bulunamadı" });
     }
 
-    res.json(rows[0]);
+    res.json(result.rows[0]);
   } catch (error) {
-    console.error(error);
+    console.error("Kullanıcı güncellenemedi:", error);
     res.status(500).json({ error: "Kullanıcı güncellenemedi" });
   }
 };
@@ -128,10 +115,44 @@ const getUserReservations = async (req, res) => {
   }
 };
 
+const getAllUsers = async (req, res) => {
+  try {
+    const result = await pool.query(
+      "SELECT id, full_name, email, phone, created_at FROM users ORDER BY created_at DESC"
+    );
+    res.json(result.rows);
+  } catch (error) {
+    console.error("Kullanıcılar getirilemedi:", error);
+    res.status(500).json({ error: "Kullanıcılar getirilemedi" });
+  }
+};
+
+const deleteUser = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const result = await pool.query(
+      "DELETE FROM users WHERE id = $1 RETURNING *",
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Kullanıcı bulunamadı" });
+    }
+
+    res.json({ message: "Kullanıcı başarıyla silindi" });
+  } catch (error) {
+    console.error("Kullanıcı silinemedi:", error);
+    res.status(500).json({ error: "Kullanıcı silinemedi" });
+  }
+};
+
 module.exports = {
   register,
   login,
   getMe,
   updateUser,
   getUserReservations,
+  getAllUsers,
+  deleteUser,
 };

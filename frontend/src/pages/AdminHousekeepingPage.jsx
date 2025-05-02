@@ -4,14 +4,43 @@ import "../styles/admin.css";
 
 const AdminHousekeepingPage = () => {
   const [rooms, setRooms] = useState([]);
-  const [personel, setPersonel] = useState({}); // odaId → personel adı
+  const [cleaningStaff, setCleaningStaff] = useState([]);
+  const [assignedStaff, setAssignedStaff] = useState({}); // odaId → personel adı
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const fetchData = async () => {
     const token = localStorage.getItem("adminToken");
-    const res = await axios.get("http://localhost:5000/api/housekeeping", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    setRooms(res.data);
+    if (!token) {
+      setError("Oturum açmanız gerekiyor");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      const [roomsRes, staffRes] = await Promise.all([
+        axios.get("http://localhost:5000/api/housekeeping", {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+        axios.get("http://localhost:5000/api/personnel/cleaning", {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+      ]);
+
+      setRooms(roomsRes.data);
+      setCleaningStaff(staffRes.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setError(
+        "Veriler yüklenirken bir hata oluştu. Lütfen sayfayı yenileyin."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -38,21 +67,17 @@ const AdminHousekeepingPage = () => {
       }
     } catch (error) {
       console.error("Status update failed:", error);
-      if (error.response) {
-        // Backend'den gelen hata mesajını göster
-        alert(
-          `Hata: ${
-            error.response.data.error || "Durum güncellenirken bir hata oluştu."
-          }`
-        );
-      } else {
-        alert("Durum güncellenirken bir hata oluştu.");
-      }
+      alert(
+        error.response?.data?.error || "Durum güncellenirken bir hata oluştu."
+      );
     }
   };
 
-  const handleAssignPerson = (room_id, name) => {
-    setPersonel((prev) => ({ ...prev, [room_id]: name }));
+  const handleAssignStaff = (room_id, staffId) => {
+    const selectedStaff = cleaningStaff.find((staff) => staff.id === staffId);
+    if (selectedStaff) {
+      setAssignedStaff((prev) => ({ ...prev, [room_id]: selectedStaff.name }));
+    }
   };
 
   const getBadge = (status) => {
@@ -70,74 +95,149 @@ const AdminHousekeepingPage = () => {
     }
   };
 
+  const getCardBackgroundColor = (status) => {
+    switch (status) {
+      case "dirty":
+        return "bg-light-red";
+      case "cleaning":
+        return "bg-light-yellow";
+      default:
+        return "";
+    }
+  };
+
+  const filteredRooms = rooms.filter(
+    (room) => statusFilter === "all" || room.status === statusFilter
+  );
+
+  if (loading) {
+    return (
+      <div className="container mt-4">
+        <div className="d-flex justify-content-center">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Yükleniyor...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mt-4">
+        <div className="alert alert-danger" role="alert">
+          {error}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mt-4">
       <h2 className="mb-4">Temizlik Kontrol Paneli</h2>
-      <div className="row g-4">
-        {rooms.map((room) => (
-          <div className="col-md-4" key={room.room_id}>
-            <div className="card shadow-sm h-100">
-              <div className="card-body">
-                <h5 className="card-title">Oda No: {room.room_number}</h5>
-                <p>
-                  Durum: {getBadge(room.status)}
-                  <br />
-                  <small>
-                    Son temizlik:{" "}
-                    {room.last_cleaned
-                      ? new Date(room.last_cleaned).toLocaleDateString()
-                      : "Yok"}
-                  </small>
-                </p>
 
-                {/* Personel Atama */}
-                <div className="input-group input-group-sm mb-2">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Personel adı"
-                    value={personel[room.room_id] || ""}
-                    onChange={(e) =>
-                      handleAssignPerson(room.room_id, e.target.value)
-                    }
-                  />
+      {/* Filtreleme Dropdown'ı */}
+      <div className="mb-4">
+        <select
+          className="form-select"
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+        >
+          <option value="all">Tüm Odalar</option>
+          <option value="clean">Temiz</option>
+          <option value="cleaning">Temizleniyor</option>
+          <option value="dirty">Kirli</option>
+          <option value="maintenance">Bakımda</option>
+        </select>
+      </div>
+
+      {rooms.length === 0 ? (
+        <div className="alert alert-info" role="alert">
+          Henüz hiç oda bulunmuyor.
+        </div>
+      ) : (
+        <div className="row g-4">
+          {filteredRooms.map((room) => (
+            <div className="col-md-4" key={room.room_id}>
+              <div
+                className={`card shadow-sm h-100 ${getCardBackgroundColor(
+                  room.status
+                )}`}
+              >
+                <div className="card-body">
+                  <h5 className="card-title">Oda No: {room.room_number}</h5>
+                  <p>
+                    Durum: {getBadge(room.status)}
+                    <br />
+                    <small>
+                      Son temizlik:{" "}
+                      {room.last_cleaned
+                        ? new Date(room.last_cleaned).toLocaleDateString()
+                        : "Yok"}
+                    </small>
+                  </p>
+
+                  {/* Personel Atama */}
+                  <div className="mb-3">
+                    <select
+                      className="form-select"
+                      value={
+                        assignedStaff[room.room_id]
+                          ? cleaningStaff.find(
+                              (staff) =>
+                                staff.name === assignedStaff[room.room_id]
+                            )?.id
+                          : ""
+                      }
+                      onChange={(e) =>
+                        handleAssignStaff(
+                          room.room_id,
+                          parseInt(e.target.value)
+                        )
+                      }
+                    >
+                      <option value="">Personel seçin</option>
+                      {cleaningStaff.map((staff) => (
+                        <option key={staff.id} value={staff.id}>
+                          {staff.name}
+                        </option>
+                      ))}
+                    </select>
+                    {assignedStaff[room.room_id] && (
+                      <small className="text-muted d-block mt-1">
+                        Atanan personel: {assignedStaff[room.room_id]}
+                      </small>
+                    )}
+                  </div>
+
+                  {/* Temizlik Kontrolleri */}
                   <button
-                    className="btn btn-outline-primary"
-                    onClick={() =>
-                      alert(`"${personel[room.room_id]}" bu odaya atandı.`)
-                    }
+                    className="btn btn-outline-danger w-100 mb-2"
+                    disabled={room.status === "dirty"}
+                    onClick={() => handleStatusUpdate(room.room_id, "dirty")}
                   >
-                    Ata
+                    Kirli Olarak İşaretle
+                  </button>
+                  <button
+                    className="btn btn-outline-warning w-100 mb-2"
+                    disabled={room.status === "cleaning"}
+                    onClick={() => handleStatusUpdate(room.room_id, "cleaning")}
+                  >
+                    Temizliği Başlat
+                  </button>
+                  <button
+                    className="btn btn-outline-success w-100"
+                    disabled={room.status === "clean"}
+                    onClick={() => handleStatusUpdate(room.room_id, "clean")}
+                  >
+                    Temiz Olarak İşaretle
                   </button>
                 </div>
-
-                {/* Temizlik Kontrolleri */}
-                <button
-                  className="btn btn-outline-danger w-100 mb-2"
-                  disabled={room.status === "dirty"}
-                  onClick={() => handleStatusUpdate(room.room_id, "dirty")}
-                >
-                  Kirli Olarak İşaretle
-                </button>
-                <button
-                  className="btn btn-outline-warning w-100 mb-2"
-                  disabled={room.status === "cleaning"}
-                  onClick={() => handleStatusUpdate(room.room_id, "cleaning")}
-                >
-                  Temizliği Başlat
-                </button>
-                <button
-                  className="btn btn-outline-success w-100"
-                  disabled={room.status === "clean"}
-                  onClick={() => handleStatusUpdate(room.room_id, "clean")}
-                >
-                  Temiz Olarak İşaretle
-                </button>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

@@ -19,6 +19,7 @@ const reservationRoutes = require("./routes/reservationRoutes");
 const customerRoutes = require("./routes/customerRoutes");
 const housekeepingRoutes = require("./routes/housekeepingRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
+const personnelRoutes = require("./routes/personnelRoutes");
 
 // Test Endpoint
 app.get("/test", async (req, res) => {
@@ -42,6 +43,7 @@ app.use("/api/reservations", reservationRoutes);
 app.use("/api/customers", customerRoutes);
 app.use("/api/housekeeping", housekeepingRoutes);
 app.use("/api/payments", paymentRoutes);
+app.use("/api/personnel", personnelRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

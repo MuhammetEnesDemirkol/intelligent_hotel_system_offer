@@ -90,6 +90,33 @@ const createReservation = async (req, res) => {
 
       console.log("Rezervasyon oluşturuldu:", rows[0]);
 
+      // Ödeme kaydı oluştur
+      const paymentResult = await client.query(
+        `INSERT INTO payments (
+          customer_id, 
+          customer_name, 
+          customer_email, 
+          reservation_id, 
+          amount, 
+          status, 
+          payment_date
+        ) 
+        SELECT 
+          $1, 
+          u.full_name, 
+          u.email, 
+          $2, 
+          $3, 
+          'completed', 
+          CURRENT_DATE
+        FROM users u
+        WHERE u.id = $1
+        RETURNING *`,
+        [customer_id, rows[0].id, total_price]
+      );
+
+      console.log("Ödeme kaydı oluşturuldu:", paymentResult.rows[0]);
+
       // Oda durumunu güncelle
       const today = new Date().toISOString().split("T")[0];
       const checkInDate = new Date(check_in).toISOString().split("T")[0];

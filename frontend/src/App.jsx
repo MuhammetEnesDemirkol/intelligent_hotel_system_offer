@@ -9,6 +9,7 @@ import UserLoginPage from "./pages/UserLoginPage";
 import AccountPage from "./pages/AccountPage";
 import PaymentPage from "./pages/PaymentPage";
 import RoomDetailPage from "./pages/RoomDetailPage";
+import AdminPersonnelPage from "./pages/AdminPersonnelPage";
 
 import PrivateRoute from "./components/PrivateRoute";
 import UserLayout from "./layouts/UserLayout";
@@ -112,6 +113,14 @@ function App() {
             element={
               <PrivateRoute>
                 <AdminRoomPricingPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="personnel"
+            element={
+              <PrivateRoute>
+                <AdminPersonnelPage />
               </PrivateRoute>
             }
           />

@@ -18,7 +18,6 @@ const Navbar = () => {
           🏨 OtelPro
         </Link>
         <Link to="/rooms">Odalar</Link>
-        <Link to="/reservation">Rezervasyon</Link>
       </div>
 
       <div className="navbar-right">
